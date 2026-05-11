@@ -1,0 +1,47 @@
+run_id: 2026-05-11-s-1-7-ci-parity
+status: in_flight
+phase: phase_2_cycle_1_complete
+planned_cycles: 1
+dep_graph:
+  cycle-1: []
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: f7f3583666f444ec68d61a1b3787961eefd24209
+  run_branch: run/2026-05-11-s-1-7-ci-parity
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 2
+issue_body_sha:
+  "2": 013db6a786b184f3f17de6a90214acb7e1a89163
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  S-1.7 CI pipeline + cross-platform parity gate. Existing CI workflow
+  (.github/workflows/ci.yml) already runs lint+typecheck+unit+a11y+e2e for web.
+  Extend (don't duplicate) to deliver REQ-012 (all checks per PR — already
+  green) and REQ-027 (cross-platform parity: iOS + Android Detox smoke).
+  Web preview via Cloudflare Pages; native builds via EAS.
+language: typescript
+constraints:
+  - TypeScript across the project (strict mode)
+  - bun as the JS package manager
+  - Conventional commits
+  - Pre-commit hooks must pass (no --no-verify)
+  - EAS for native; Cloudflare Pages for web previews
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0

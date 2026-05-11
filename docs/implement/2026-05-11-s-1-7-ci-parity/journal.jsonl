@@ -1,0 +1,8 @@
+{"ts":"2026-05-11T13:55:00Z","event":"phase_bootstrap_started","run_id":"2026-05-11-s-1-7-ci-parity","input":"#2"}
+{"ts":"2026-05-11T13:55:30Z","event":"phase_bootstrap_complete","run_id":"2026-05-11-s-1-7-ci-parity","input_shape":"issue","triviality":"standard","mode":"concurrent","pr_strategy":"one","aggregate_budget":12}
+{"ts":"2026-05-11T13:58:00Z","event":"phase_define_started","run_id":"2026-05-11-s-1-7-ci-parity"}
+{"ts":"2026-05-11T14:00:00Z","event":"phase_define_complete","run_id":"2026-05-11-s-1-7-ci-parity","ac_count":5,"issue_bound":2,"issue_body_sha":"013db6a786b184f3f17de6a90214acb7e1a89163"}
+{"ts":"2026-05-11T14:02:00Z","event":"phase_scope_complete","run_id":"2026-05-11-s-1-7-ci-parity","planned_cycles":1}
+{"ts":"2026-05-11T14:02:30Z","event":"phase_scaffold_complete","run_id":"2026-05-11-s-1-7-ci-parity","adr_count":1}
+{"ts":"2026-05-11T14:03:00Z","event":"phase_2_cycle_started","run_id":"2026-05-11-s-1-7-ci-parity","cycle_id":"cycle-1"}
+{"ts": "2026-05-11T00:00:00Z", "event": "phase_2_cycle_1_complete", "cycle": "cycle-1", "files_changed": 8, "tests": "16 suites / 83 tests"}
