@@ -1,4 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { ClerkProvider, useAuth as useClerkAuth, useUser } from "@clerk/clerk-expo";
+import { useCallback, useMemo, type ReactNode } from "react";
+
+import { tokenCache } from "./token-cache";
 
 export type AuthUser = {
   id: string;
@@ -9,46 +12,45 @@ export type AuthContextValue = {
   isLoaded: boolean;
   isSignedIn: boolean;
   user: AuthUser | null;
-  signIn: (user: AuthUser) => void;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 };
 
-const noop = () => {};
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-const defaultValue: AuthContextValue = {
-  isLoaded: false,
-  isSignedIn: false,
-  user: null,
-  signIn: noop,
-  signOut: noop,
-};
-
-const AuthContext = createContext<AuthContextValue>(defaultValue);
-
-/**
- * Stub auth provider used in cycle-3 to wire routing + gating. Cycle-4
- * replaces this with Clerk's `useAuth()` while keeping the same shape.
- */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-
-  const signIn = useCallback((next: AuthUser) => setUser(next), []);
-  const signOut = useCallback(() => setUser(null), []);
-
-  const value = useMemo<AuthContextValue>(
-    () => ({
-      isLoaded: true,
-      isSignedIn: user !== null,
-      user,
-      signIn,
-      signOut,
-    }),
-    [user, signIn, signOut],
+  if (!publishableKey) {
+    throw new Error(
+      "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Copy .env.example to .env and set it.",
+    );
+  }
+  return (
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      {children}
+    </ClerkProvider>
   );
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContextValue {
-  return useContext(AuthContext);
+  const clerkAuth = useClerkAuth();
+  const { user, isLoaded: userLoaded } = useUser();
+
+  const signOut = useCallback(async () => {
+    await clerkAuth.signOut();
+  }, [clerkAuth]);
+
+  return useMemo<AuthContextValue>(() => {
+    const isLoaded = clerkAuth.isLoaded === true && userLoaded === true;
+    const isSignedIn = clerkAuth.isSignedIn === true;
+    const mappedUser: AuthUser | null =
+      isSignedIn && user
+        ? {
+            id: user.id,
+            identifier:
+              user.primaryEmailAddress?.emailAddress ??
+              user.primaryPhoneNumber?.phoneNumber ??
+              user.id,
+          }
+        : null;
+    return { isLoaded, isSignedIn, user: mappedUser, signOut };
+  }, [clerkAuth.isLoaded, clerkAuth.isSignedIn, user, userLoaded, signOut]);
 }
