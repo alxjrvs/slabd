@@ -1,31 +1,31 @@
 import { useSignUp } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
-import { isValidEmail } from "~/lib/identifier";
+import { isValidPhone } from "~/lib/identifier";
 
-export default function SignInScreen() {
+export default function SignInPhoneScreen() {
   const router = useRouter();
   const { isLoaded, signUp } = useSignUp();
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    const trimmed = email.trim();
-    if (!isValidEmail(trimmed)) {
-      setError("Enter a valid email address.");
+    const trimmed = phone.trim();
+    if (!isValidPhone(trimmed)) {
+      setError("Include your country code, e.g. +15555550101.");
       return;
     }
     if (!isLoaded || !signUp) return;
     setSubmitting(true);
     setError(null);
     try {
-      await signUp.create({ emailAddress: trimmed });
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      router.push({ pathname: "/(auth)/verify-email", params: { email: trimmed } });
+      await signUp.create({ phoneNumber: trimmed });
+      await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
+      router.push({ pathname: "/(auth)/verify-phone", params: { phone: trimmed } });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't send code. Try again.");
     } finally {
@@ -39,23 +39,20 @@ export default function SignInScreen() {
         Slabd
       </Text>
       <Text muted style={styles.tagline}>
-        An Infinite Longbox
+        Continue with your phone number
       </Text>
       <View style={styles.form}>
         <Field
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+          label="Phone number"
+          value={phone}
+          onChangeText={setPhone}
+          keyboardType="phone-pad"
           autoCapitalize="none"
-          autoComplete="email"
+          autoComplete="tel"
           autoCorrect={false}
           error={error ?? undefined}
         />
         <Button label="Send code" onPress={handleSubmit} loading={submitting} />
-        <Link href="/(auth)/sign-in-phone" asChild>
-          <Text style={styles.alt}>Use phone number instead</Text>
-        </Link>
       </View>
     </View>
   );
@@ -78,9 +75,5 @@ const styles = StyleSheet.create({
   form: {
     marginTop: 32,
     gap: 16,
-  },
-  alt: {
-    textAlign: "center",
-    textDecorationLine: "underline",
   },
 });

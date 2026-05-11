@@ -6,9 +6,9 @@ import { StyleSheet } from "react-native";
 import { Button, Field, Text, View } from "~/components/ds";
 import { isValidOtp } from "~/lib/identifier";
 
-export default function VerifyEmailScreen() {
+export default function VerifyPhoneScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ email?: string }>();
+  const params = useLocalSearchParams<{ phone?: string }>();
   const { isLoaded, signUp, setActive } = useSignUp();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export default function VerifyEmailScreen() {
     setSubmitting(true);
     setError(null);
     try {
-      const result = await signUp.attemptEmailAddressVerification({ code });
+      const result = await signUp.attemptPhoneNumberVerification({ code });
       if (result.status === "complete" && result.createdSessionId) {
         await setActive({ session: result.createdSessionId });
         router.replace("/(app)");
@@ -39,9 +39,9 @@ export default function VerifyEmailScreen() {
 
   return (
     <View surface="bg" style={styles.container}>
-      <Text variant="title">Check your email</Text>
+      <Text variant="title">Check your phone</Text>
       <Text muted>
-        We sent a verification code to {params.email ?? "your email address"}.
+        We sent a verification code to {params.phone ?? "your phone number"}.
       </Text>
       <View style={styles.form}>
         <Field
