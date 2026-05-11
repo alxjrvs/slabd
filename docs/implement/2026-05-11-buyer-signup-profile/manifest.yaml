@@ -1,0 +1,33 @@
+run_id: 2026-05-11-buyer-signup-profile
+status: in_flight
+phase: phase_0_complete
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 16
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: 6168545
+  gh_available: true
+issues:
+  - 1
+issue_body_sha:
+  "1": 1fab899ab0a05156ccd8c868a3d93b8103d1381a
+flags:
+  no_issue: false
+  no_issue_create: true
+scope_note: |
+  Combined run: scaffold U-Foundation-App-Shell (Expo monorepo, Clerk auth wiring,
+  base navigation, design system primitives) AND implement S-1.1 (Buyer sign-up
+  via email/phone OTP + editable profile screen). Cross-platform: iOS, Android, Web.
+language: typescript
+constraints:
+  - TypeScript across all packages (strict mode preferred)
+  - bun as the JS package manager
+  - Conventional commits
+test_commands: []
+cost_so_far: 0
+journal_path: docs/implement/2026-05-11-buyer-signup-profile/journal.jsonl

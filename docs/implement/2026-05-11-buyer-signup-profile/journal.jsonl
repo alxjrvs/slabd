@@ -1,0 +1,8 @@
+{"ts":"2026-05-11T00:00:00Z","phase":"bootstrap","event":"phase_complete","run_id":"2026-05-11-buyer-signup-profile","mode":"concurrent","pr_strategy":"one","aggregate_budget":16,"input_shape":"issue","triviality":"standard"}
+{"ts":"2026-05-11T00:00:01Z","phase":"define","event":"intake_complete","source":"issue:1","body_sha":"1fab899ab0a05156ccd8c868a3d93b8103d1381a"}
+{"ts":"2026-05-11T00:00:02Z","phase":"define","event":"intent_written","ac_count":7,"path":"docs/implement/2026-05-11-buyer-signup-profile/intent.md"}
+{"ts":"2026-05-11T00:00:03Z","phase":"define","event":"phase_complete","issues":[1],"created":false}
+{"ts":"2026-05-11T00:00:10Z","phase":"phase_0","event":"plan_written","cycle_count":7,"path":"plan.md"}
+{"ts":"2026-05-11T00:00:11Z","phase":"phase_0","event":"scaffold_written","adr_count":5,"context_readme":true}
+{"ts":"2026-05-11T00:00:12Z","phase":"phase_0","event":"phase_complete"}
+{"ts":"2026-05-11T00:00:20Z","phase":"phase_2","event":"cycle_complete","cycle":"cycle-1","ac":"AC-1","tests_passing":true}
