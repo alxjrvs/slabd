@@ -64,3 +64,154 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 7
+
+  check-eas-secret:
+    name: check eas secret
+    runs-on: ubuntu-latest
+    outputs:
+      have_expo_token: ${{ steps.check.outputs.have_expo_token }}
+    steps:
+      - id: check
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -n "$EXPO_TOKEN" ]; then
+            echo "have_expo_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "have_expo_token=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::EXPO_TOKEN secret not set; iOS + Android smoke jobs will be skipped"
+          fi
+
+  ios-smoke:
+    name: detox smoke (iOS)
+    needs: [unit, check-eas-secret]
+    if: needs.check-eas-secret.outputs.have_expo_token == 'true'
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+      - run: bun install --frozen-lockfile
+      - name: install eas + detox CLIs
+        run: bun add -g eas-cli detox-cli
+      - name: build app for iOS simulator (EAS local)
+        run: eas build --platform ios --profile dev-sim --local --non-interactive --output ios-build.tar.gz
+      - name: unpack build into Detox-expected path
+        run: |
+          mkdir -p ios/build/Build/Products/Debug-iphonesimulator
+          tar -xzf ios-build.tar.gz -C ios/build/Build/Products/Debug-iphonesimulator
+      - name: boot iOS simulator
+        run: |
+          xcrun simctl boot "iPhone 15" || true
+          xcrun simctl bootstatus "iPhone 15" -b
+      - name: run detox smoke
+        run: bunx detox test --configuration ios.sim.debug --headless --record-logs all
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detox-ios-artifacts
+          path: artifacts
+          retention-days: 7
+
+  android-smoke:
+    name: detox smoke (Android)
+    needs: [unit, check-eas-secret]
+    if: needs.check-eas-secret.outputs.have_expo_token == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - run: bun install --frozen-lockfile
+      - name: install eas + detox CLIs
+        run: bun add -g eas-cli detox-cli
+      - name: build app for Android emulator (EAS local)
+        run: eas build --platform android --profile dev-emulator --local --non-interactive --output android-build.tar.gz
+      - name: unpack build into Detox-expected path
+        run: |
+          mkdir -p android/app/build/outputs/apk/debug
+          tar -xzf android-build.tar.gz -C android/app/build/outputs/apk/debug
+      - name: run detox smoke on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: pixel_6
+          script: bunx detox test --configuration android.emu.debug --headless --record-logs all
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detox-android-artifacts
+          path: artifacts
+          retention-days: 7
+
+  check-cloudflare-secret:
+    name: check cloudflare secret
+    runs-on: ubuntu-latest
+    outputs:
+      have_cloudflare: ${{ steps.check.outputs.have_cloudflare }}
+    steps:
+      - id: check
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CF_TOKEN" ] && [ -n "$CF_ACCOUNT" ]; then
+            echo "have_cloudflare=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "have_cloudflare=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set; web-preview job will be skipped"
+          fi
+
+  web-preview:
+    name: cloudflare pages preview (web)
+    needs: [unit, check-cloudflare-secret]
+    if: needs.check-cloudflare-secret.outputs.have_cloudflare == 'true' && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+      - run: bun install --frozen-lockfile
+      - name: build expo web bundle
+        run: bunx expo export --platform web --output-dir dist
+      - name: deploy to cloudflare pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=slabd-web --branch=${{ github.head_ref }} --commit-dirty=true
+      - name: post preview comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: web-preview
+          message: |
+            **Web preview**: ${{ steps.deploy.outputs.deployment-url }}
+
+            Built from `${{ github.event.pull_request.head.sha }}` on `${{ github.event.pull_request.head.ref }}`.
