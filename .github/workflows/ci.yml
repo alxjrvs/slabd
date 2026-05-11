@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: typecheck + lint + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run lint
+      - run: bun run test:ci
+
+  check-e2e-secret:
+    name: check e2e secret
+    runs-on: ubuntu-latest
+    outputs:
+      have_clerk_key: ${{ steps.check.outputs.have_clerk_key }}
+    steps:
+      - id: check
+        env:
+          CLERK_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        run: |
+          if [ -n "$CLERK_KEY" ]; then
+            echo "have_clerk_key=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "have_clerk_key=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY secret not set; e2e job will be skipped"
+          fi
+
+  e2e:
+    name: playwright e2e (web)
+    needs: [unit, check-e2e-secret]
+    if: needs.check-e2e-secret.outputs.have_clerk_key == 'true'
+    runs-on: ubuntu-latest
+    env:
+      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+      - run: bun install --frozen-lockfile
+      - name: install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: run e2e suite
+        run: bun run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
