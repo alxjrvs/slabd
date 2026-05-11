@@ -1,6 +1,6 @@
 run_id: 2026-05-11-buyer-signup-profile
-status: in_flight
-phase: phase_0_complete
+status: shipped
+phase: phase_deliver_complete
 input_shape: issue
 triviality: standard
 mode: concurrent
