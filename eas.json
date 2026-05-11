@@ -28,7 +28,10 @@
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "SENTRY_UPLOAD_SOURCEMAPS": "1"
+      }
     }
   },
   "submit": {
