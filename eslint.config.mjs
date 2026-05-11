@@ -21,6 +21,18 @@ export default [
     },
   },
   {
+    files: ["app/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"],
+    ignores: [
+      "**/__tests__/**",
+      "**/*.test.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+      "lib/logger.ts",
+    ],
+    rules: {
+      "no-console": "error",
+    },
+  },
+  {
     files: ["e2e/detox/**/*.js"],
     languageOptions: {
       globals: {

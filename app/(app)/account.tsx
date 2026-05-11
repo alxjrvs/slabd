@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Switch } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
+import { logger, serializeError } from "~/lib/logger";
 import { useTheme } from "~/lib/theme-provider";
 
 type NotificationPrefs = {
@@ -69,8 +70,10 @@ export default function AccountScreen() {
       });
       setSavedAt(Date.now());
     } catch (err) {
-      // TODO(S-1.5): structured log to Sentry with the Clerk error code
-      console.error("account: user.update failed", err);
+      logger.error("account: user.update failed", {
+        flow: "account.update",
+        error: serializeError(err),
+      });
       setError("Couldn't save changes. Please try again.");
     } finally {
       setSubmitting(false);

@@ -3,6 +3,8 @@ import { Platform } from "react-native";
 
 import type { TokenCache } from "@clerk/clerk-expo";
 
+import { logger, serializeError } from "./logger";
+
 const secureStoreOpts: SecureStore.SecureStoreOptions = {
   keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK,
 };
@@ -26,16 +28,27 @@ export const tokenCache: TokenCache = {
       return await SecureStore.getItemAsync(key, secureStoreOpts);
     } catch (err) {
       if (isCorruptDataError(err)) {
-        // TODO(S-1.5): replace with structured logger / Sentry breadcrumb
-        console.warn(`tokenCache: corrupt entry for "${key}", self-healing`, err);
+        logger.warn(`tokenCache: corrupt entry for "${key}", self-healing`, {
+          breadcrumb_category: "corrupt_token_cache",
+          key,
+          error: serializeError(err),
+        });
         try {
           await SecureStore.deleteItemAsync(key, secureStoreOpts);
         } catch (deleteErr) {
-          console.error(`tokenCache: delete-on-corrupt failed for "${key}"`, deleteErr);
+          logger.error(`tokenCache: delete-on-corrupt failed for "${key}"`, {
+            breadcrumb_category: "corrupt_token_cache",
+            key,
+            error: serializeError(deleteErr),
+          });
         }
         return null;
       }
-      console.error(`tokenCache: read failed for "${key}"`, err);
+      logger.error(`tokenCache: read failed for "${key}"`, {
+        breadcrumb_category: "token_cache",
+        key,
+        error: serializeError(err),
+      });
       throw err;
     }
   },
@@ -44,7 +57,11 @@ export const tokenCache: TokenCache = {
     try {
       await SecureStore.setItemAsync(key, value, secureStoreOpts);
     } catch (err) {
-      console.error(`tokenCache: write failed for "${key}"`, err);
+      logger.error(`tokenCache: write failed for "${key}"`, {
+        breadcrumb_category: "token_cache",
+        key,
+        error: serializeError(err),
+      });
       throw err;
     }
   },
