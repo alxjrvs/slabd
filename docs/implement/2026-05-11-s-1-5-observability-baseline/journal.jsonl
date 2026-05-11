@@ -1,0 +1,2 @@
+{"ts":"2026-05-11T14:26:00Z","event":"phase_bootstrap_complete","run_id":"2026-05-11-s-1-5-observability-baseline","base_sha":"1adad7e04330d2b05d06ebfe9fade54499cb0c28","run_branch":"run/2026-05-11-s-1-5-observability-baseline","issues":[5],"mode":"concurrent","pr_strategy":"one","aggregate_budget":12,"planned_cycles":3}
+{"ts":"2026-05-11T14:32:00Z","event":"phase_define_complete","run_id":"2026-05-11-s-1-5-observability-baseline","intent_path":"docs/implement/2026-05-11-s-1-5-observability-baseline/intent.md","ac_count":5}

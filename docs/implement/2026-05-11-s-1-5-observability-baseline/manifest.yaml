@@ -1,0 +1,53 @@
+run_id: 2026-05-11-s-1-5-observability-baseline
+status: in_flight
+phase: phase_bootstrap_complete
+planned_cycles: 3
+dep_graph:
+  cycle-1: []
+  cycle-2: [cycle-1]
+  cycle-3: [cycle-1]
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: 1adad7e04330d2b05d06ebfe9fade54499cb0c28
+  run_branch: run/2026-05-11-s-1-5-observability-baseline
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 5
+issue_body_sha:
+  "5": 987b7c6deecec5d2d2950d53955ed62de282381a
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  Land an observability baseline for the Expo app (REQ-029, REQ-037).
+  M1 backend doesn't exist yet, so the API-side Gherkin lines from
+  issue #5 are scoped down to what's buildable now: client-side
+  Sentry SDK + breadcrumb infrastructure (unblocks follow-up #38),
+  PostHog product-analytics SDK, and a correlation-ID-aware logger
+  surface ready to extend when the API lands. Datadog browser/mobile
+  RUM is deferred to a follow-up after the API ships, in line with
+  the architecture's M3 SLO-configuration milestone.
+language: typescript
+constraints:
+  - Sentry releases must tag with EAS_BUILD_RUNTIME_VERSION + commit SHA
+  - PostHog uses the same EAS-provisioned EXPO_PUBLIC_* env-var convention
+    established by Clerk in S-1.1
+  - Conventional commits, pre-commit hooks must pass
+  - No console.* in production code (use the logger surface)
+  - Source maps uploaded to Sentry on EAS Build (not required for local dev)
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0

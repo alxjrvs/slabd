@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
 import { isValidPhone } from "~/lib/identifier";
+import { logger, serializeError } from "~/lib/logger";
 
 export default function SignInPhoneScreen() {
   const router = useRouter();
@@ -30,8 +31,10 @@ export default function SignInPhoneScreen() {
       await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
       router.push({ pathname: "/(auth)/verify-phone", params: { phone: trimmed } });
     } catch (err) {
-      // TODO(S-1.5): structured log to Sentry with the Clerk error code
-      console.error("sign-up phone: prepare failed", err);
+      logger.error("sign-up phone: prepare failed", {
+        flow: "auth.phone.sign_in",
+        error: serializeError(err),
+      });
       setError("Couldn't send code. Try again.");
     } finally {
       setSubmitting(false);

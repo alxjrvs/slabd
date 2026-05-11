@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
 import { isValidEmail } from "~/lib/identifier";
+import { logger, serializeError } from "~/lib/logger";
 
 export default function SignInScreen() {
   const router = useRouter();
@@ -30,8 +31,10 @@ export default function SignInScreen() {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       router.push({ pathname: "/(auth)/verify-email", params: { email: trimmed } });
     } catch (err) {
-      // TODO(S-1.5): structured log to Sentry with the Clerk error code
-      console.error("sign-up email: prepare failed", err);
+      logger.error("sign-up email: prepare failed", {
+        flow: "auth.email.sign_in",
+        error: serializeError(err),
+      });
       setError("Couldn't send code. Try again.");
     } finally {
       setSubmitting(false);

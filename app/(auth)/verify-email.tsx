@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
 import { isValidOtp } from "~/lib/identifier";
+import { logger, serializeError } from "~/lib/logger";
 
 export default function VerifyEmailScreen() {
   const router = useRouter();
@@ -34,8 +35,10 @@ export default function VerifyEmailScreen() {
         setError("We couldn't verify that code. Try requesting a new one.");
       }
     } catch (err) {
-      // TODO(S-1.5): structured log to Sentry with the Clerk error code
-      console.error("verify email: attempt failed", err);
+      logger.error("verify email: attempt failed", {
+        flow: "auth.email.verify",
+        error: serializeError(err),
+      });
       setError("We couldn't verify that code. Try requesting a new one.");
     } finally {
       setSubmitting(false);
