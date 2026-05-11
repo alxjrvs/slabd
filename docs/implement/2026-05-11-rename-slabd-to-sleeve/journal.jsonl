@@ -1,0 +1,2 @@
+{"ts": "2026-05-11T18:00:00Z", "event": "phase_bootstrap_complete", "run_id": "2026-05-11-rename-slabd-to-sleeve"}
+{"ts": "2026-05-11T18:00:00Z", "event": "phase_define_complete", "issue": 40, "acs": 5}

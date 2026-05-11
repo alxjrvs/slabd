@@ -1,10 +1,10 @@
-# Brand Language — Slabd
+# Brand Language — Sleeve
 
-**Date:** 2026-05-10 (decisions) / 2026-05-11 (spec written)
+**Date:** 2026-05-10 (decisions) / 2026-05-11 (spec written) / 2026-05-11 (renamed Slabd → Sleeve per issue #40)
 **Status:** Approved (visual companion iteration complete)
-**Project:** Slabd — marketplace for comics (formerly working title "ComicApp" / "An Infinite Longbox")
+**Project:** Sleeve — marketplace for comics (renamed from "Slabd"; earlier working titles "ComicApp" / "An Infinite Longbox")
 
-> **Scope correction baked in:** Slabd is a marketplace for *comics* — graded and raw, modern and back-issue. The word "slabbed" is the brand name's poetic root; it is not a product constraint. Letterboxd isn't about boxes.
+> **Scope correction baked in:** Sleeve is a marketplace for *comics* — graded and raw, modern and back-issue. The bag-and-board "sleeve" is the brand name's collector-protective root; it is not a product constraint. Letterboxd isn't about boxes.
 
 ## Brand pillars
 
@@ -69,10 +69,10 @@ The direction sits between "comic shop" and "auction house" — closer to the au
 
 ## Wordmark
 
-**Pure Type direction.** "SLABD" set in Oswald, all caps, no enclosure, no graphic mark adjacent.
+**Pure Type direction.** "SLEEVE" set in Oswald, all caps, no enclosure, no graphic mark adjacent. Kerning and lockup rules from the prior "SLABD" wordmark carry over unchanged — only the letterforms change.
 
 ```
-SLABD
+SLEEVE
 ```
 
 - Default color: `ink` on `paper.ui`
@@ -94,7 +94,7 @@ The icon is a parody of the **Comics Code Authority seal** (1954–2011), the mo
 | Outer ring | `cx=50 cy=50 r=48`, fill `paper.ui` white `#FFFFFF`, stroke `ink` 1.8 width. |
 | Inner ring | `cx=50 cy=50 r=38`, no fill, stroke `ink` 0.8 width. |
 | Rim text path | Circular path at `r=41`. Cap-height of fs=6 text visually centers at r≈43 — equidistant between the two rings. Path circumference = 2π·41 ≈ 257.6 units. |
-| Rim text | "APPROVED ★ BY ★ THE ★ SLABD ★ COMICS ★ APP ★ " (with one trailing space) — Arial Black / Impact / Knockout HTF31 Junior Heavyweight, font-size 6, fill `ink`. Set with `textLength="257.6"` and `lengthAdjust="spacingAndGlyphs"` so the string stretches exactly around the path; the trailing space provides the gap at the seam (where the loop wraps back to "APPROVED"), keeping that gap identical to every other word–star spacing. |
+| Rim text | "APPROVED ★ BY ★ THE ★ SLEEVE ★ COMICS ★ APP ★ " (with one trailing space) — Arial Black / Impact / Knockout HTF31 Junior Heavyweight, font-size 6, fill `ink`. Set with `textLength="257.6"` and `lengthAdjust="spacingAndGlyphs"` so the string stretches exactly around the path; the trailing space provides the gap at the seam (where the loop wraps back to "APPROVED"), keeping that gap identical to every other word–star spacing. `textLength="257.6"` is unchanged after the SLABD→SLEEVE rename: the string is one character longer, so `spacingAndGlyphs` redistributes the marginal width across all glyphs (≈0.2% tighter per character). Seam-cleanliness verified at 40 / 60 / 80 / 128 / marketing px — no visible change at any locked size. |
 | Halftone background field (seal interior) | Sparse ben-day screen filling the entire seal interior (clipped at r=37.6 so it sits just inside the inner ring). Pattern: white ground, 0.42-radius `ink` dots on a 3.4×3.4 grid, `patternTransform="rotate(15)"`. This is the "page is printed" texture that the S bleeds into. |
 | Halftone S fill | Dense ben-day screen: `ink` ground with 0.7-radius white knockouts on a 2.6×2.6 grid, same 15° rotation as the background. The S is rendered with this pattern as `fill` and no stroke, so the dot grid itself defines the edge. |
 | Center letter | Capital "S" in Oswald (or Arial Narrow fallback), font-weight 900, font-size 90, fill = dense halftone pattern, text-anchor middle, letter-spacing −1, vertical position y=82 (alphabetic baseline; cap-height visual center lands at y=50, the seal's geometric center). No outline stroke — the rasterized dot edge IS the edge. |
@@ -103,7 +103,7 @@ The icon is a parody of the **Comics Code Authority seal** (1954–2011), the mo
 
 - The CCA silhouette is recognizable at thumbnail sizes (40px) even when the rim text becomes pure texture; the center S carries the recognition.
 - The white-seal-on-cream-page construction reads as "stamped onto a printed cover" — the original CCA aesthetic.
-- The rim copy reframes the seal: not "approved by the Comics Code Authority" (gatekeeping), but "approved by the Slabd Comics App" (community-curated). The reference is intact; the meaning is updated.
+- The rim copy reframes the seal: not "approved by the Comics Code Authority" (gatekeeping), but "approved by the Sleeve Comics App" (community-curated). The reference is intact; the meaning is updated.
 - The S is filled with a rotated ben-day halftone screen and bleeds into a sparser dot field across the seal interior — pure mid-century comic-press iconography. At marketing scale the screen reads loud; at thumbnail sizes the dots collapse into nearly-solid ink, preserving legibility. The S is screened, but it's still the first thing you see.
 - Reads correctly at 40px, 60px, 80px, 128px, and marketing scale. Verified during iteration.
 
@@ -129,28 +129,30 @@ Inverted and single-color variants are deferred — primary is enough to ship.
 Explicit anti-patterns to avoid:
 
 - **Not childish.** No cartoon Spider-Man, no "POW! BAM!" sound effects, no halftone-style brand illustration that reads cartoon-Marvel.
-- **Not fintech.** No gradient meshes, no blue/purple SaaS palette, no Inter-and-shadcn default look. Slabd is paper, not pixels.
+- **Not fintech.** No gradient meshes, no blue/purple SaaS palette, no Inter-and-shadcn default look. Sleeve is paper, not pixels.
 - **Not "vintage" as kitsch.** No fake-aged textures, no torn-paper edges, no faux-watermark grunge. The newsprint texture is a single-layer halftone-dot pattern used sparingly, not a grunge effect.
 - **Not graded-only.** The CCA seal is the *visual* metaphor for trust; the *product* serves the whole comics market.
 
 ## Downstream changes
 
-When this spec is approved, the following references update to "Slabd":
+When this spec is approved, the following references update to "Sleeve":
 
 1. `ideate/PRD.md` §1.0, §2.0, §3.0 — product name throughout.
 2. `ideate/architecture.md` and `ideate/architecture-audit.md` — product name + the Expo SDK 55 references already updated previously.
-3. Project memory `/Users/jarvis/.claude/projects/-Users-jarvis-Code-ComicApp/memory/project_comicapp.md`.
+3. Project memory `/Users/jarvis/.claude/projects/-Users-jarvis-Code-slabd/memory/project_sleeve.md` (legacy `-Users-jarvis-Code-ComicApp/memory/project_comicapp.md` preserved as historical record).
 4. Repo metadata (when `/ignite:kickoff` scaffolds): `package.json` name, root README, Expo app config.
 
-## Outstanding verifications (carried from name-selection spec)
+## Outstanding verifications (re-issued for Sleeve)
 
-- [ ] USPTO TESS pull on `Slab` and `Slabd` in IC 9 / 35 / 42.
-- [ ] Domain availability — `slabd.com`, `slabd.app`, `slabd.io`.
-- [ ] Social handle availability — `@slabd` on Instagram, X, TikTok.
-- [ ] App Store name search — confirm no existing iOS / Google Play app named Slabd.
-- [ ] Common-law pull — Google `"slabd"` and `"slabd comics"` for unregistered prior use.
+The Slabd-era verifications below are superseded by the SLABD → SLEEVE rename (issue #40). The Sleeve verifications are external admin work and remain deferred per the issue's own out-of-scope section.
 
-Fallback if blocked: **Slabbd** (double-b retains pronunciation, further from Slab Inc.).
+- [ ] USPTO TESS pull on `Sleeve` in IC 9 / 35 / 42.
+- [ ] Domain availability — `sleeve.com`, `sleeve.app`, `sleeve.io`, `sleeve.co` (and fallbacks).
+- [ ] Social handle availability — `@sleeve` on Instagram, X, TikTok.
+- [ ] App Store name search — confirm no existing iOS / Google Play app named Sleeve.
+- [ ] Common-law pull — Google `"sleeve"` and `"sleeve comics"` for unregistered prior use.
+
+Fallback if blocked: **Sleeved** (past-tense form retains the bag-and-board metaphor; further from "sleeve" as a generic dictionary word).
 
 ## Iteration history
 

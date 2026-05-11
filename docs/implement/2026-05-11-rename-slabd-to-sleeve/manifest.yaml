@@ -1,0 +1,47 @@
+run_id: 2026-05-11-rename-slabd-to-sleeve
+status: in_flight
+phase: phase_bootstrap_complete
+planned_cycles: 2
+dep_graph:
+  cycle-1: []
+  cycle-2: [cycle-1]
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: cfbc97e84b7b5db0c863c0c0a6cf8c1b1780889b
+  run_branch: run/2026-05-11-rename-slabd-to-sleeve
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 40
+issue_body_sha:
+  "40": 82b55daf8efc257aae8b91869380f5dbe530e3ef
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  Rename product Slabd → Sleeve across repo docs, brand-language spec wordmark,
+  and the app icon SVG rim text. Scaffolding metadata (package.json, Expo config)
+  and external work (TESS pull, domain checks, repo/dir rename) are explicitly
+  deferred per the issue's own out-of-scope section.
+language: typescript
+constraints:
+  - Wordmark stays Oswald; only the letters change
+  - SVG rim text textLength=257.6 must continue to wrap cleanly with the new (one-char-longer) string; verify or adjust
+  - Brand palette / type stack / CCA-seal composition unchanged
+  - App icon container unchanged (cream paper.printed background)
+  - Conventional commits, pre-commit hooks must pass
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0
