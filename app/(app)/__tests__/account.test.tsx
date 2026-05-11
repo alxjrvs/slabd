@@ -48,6 +48,11 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockUpdate.mockResolvedValue(undefined);
   mockUseUser.mockReturnValue({ isLoaded: true, isSignedIn: true, user: buildUser() });
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 describe("AccountScreen (AC-5 profile editing)", () => {
@@ -93,5 +98,49 @@ describe("AccountScreen (AC-5 profile editing)", () => {
     await waitFor(() => {
       expect(mockSignOut).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it("AC-5: preserves other unsafeMetadata keys when saving notification prefs", async () => {
+    mockUseUser.mockReturnValue({
+      isLoaded: true,
+      isSignedIn: true,
+      user: buildUser({
+        unsafeMetadata: {
+          notifications: { drops: true, messages: true },
+          stripeCustomerId: "cus_existing",
+          onboardingStep: "complete",
+        },
+      }),
+    });
+    render(<AccountScreen />);
+    fireEvent.press(screen.getByRole("switch", { name: "Direct messages" }));
+    fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalledWith({
+        firstName: "Buyer",
+        lastName: "One",
+        unsafeMetadata: {
+          notifications: { drops: true, messages: false },
+          stripeCustomerId: "cus_existing",
+          onboardingStep: "complete",
+        },
+      });
+    });
+  });
+
+  it("surfaces a generic error and does NOT leak the Clerk error message when user.update rejects", async () => {
+    mockUpdate.mockRejectedValueOnce(
+      Object.assign(new Error("form_first_name_max_length_exceeded"), {
+        errors: [{ code: "form_first_name_max_length_exceeded" }],
+      }),
+    );
+    render(<AccountScreen />);
+    fireEvent.changeText(screen.getByLabelText("First name"), "Bobby");
+    fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    await waitFor(() => {
+      expect(screen.getByText("Couldn't save changes. Please try again.")).toBeOnTheScreen();
+    });
+    expect(screen.queryByText(/form_first_name_max_length_exceeded/)).toBeNull();
+    expect(screen.queryByText(/saved/i)).toBeNull();
   });
 });

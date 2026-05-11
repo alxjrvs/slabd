@@ -43,11 +43,15 @@ export default function AccountScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const userId = user?.id;
   useEffect(() => {
     setFirstName(user?.firstName ?? "");
     setLastName(user?.lastName ?? "");
     setPrefs(initialPrefs);
-  }, [user, initialPrefs]);
+    // Only resync form state when the signed-in identity changes — not on
+    // every Clerk reload (which would clobber unsaved edits after a save).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const identifier =
     user?.primaryEmailAddress?.emailAddress ?? user?.primaryPhoneNumber?.phoneNumber ?? "";
@@ -57,14 +61,17 @@ export default function AccountScreen() {
     setSubmitting(true);
     setError(null);
     try {
+      const existing = (user.unsafeMetadata ?? {}) as Record<string, unknown>;
       await user.update({
         firstName,
         lastName,
-        unsafeMetadata: { notifications: prefs },
+        unsafeMetadata: { ...existing, notifications: prefs },
       });
       setSavedAt(Date.now());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn't save changes.");
+      // TODO(S-1.5): structured log to Sentry with the Clerk error code
+      console.error("account: user.update failed", err);
+      setError("Couldn't save changes. Please try again.");
     } finally {
       setSubmitting(false);
     }

@@ -19,7 +19,10 @@ export default function VerifyEmailScreen() {
       setError("Enter the 6-digit code we sent you.");
       return;
     }
-    if (!isLoaded || !signUp) return;
+    if (!isLoaded || !signUp) {
+      setError("Verification isn't ready yet. Please try again in a moment.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -31,7 +34,9 @@ export default function VerifyEmailScreen() {
         setError("We couldn't verify that code. Try requesting a new one.");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "We couldn't verify that code.");
+      // TODO(S-1.5): structured log to Sentry with the Clerk error code
+      console.error("verify email: attempt failed", err);
+      setError("We couldn't verify that code. Try requesting a new one.");
     } finally {
       setSubmitting(false);
     }

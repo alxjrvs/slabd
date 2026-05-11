@@ -1,9 +1,3 @@
-/**
- * Theme tokens for Slabd. Light + dark palettes meet WCAG 2.1 AA contrast
- * for body text against their surface (verified via @ds-tokens contrast
- * pairs in `ds/__tests__/theme.test.ts`).
- */
-
 export type ColorScheme = "light" | "dark";
 
 export type Palette = {

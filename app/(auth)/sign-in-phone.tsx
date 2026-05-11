@@ -19,7 +19,10 @@ export default function SignInPhoneScreen() {
       setError("Include your country code, e.g. +15555550101.");
       return;
     }
-    if (!isLoaded || !signUp) return;
+    if (!isLoaded || !signUp) {
+      setError("Sign-up isn't ready yet. Please try again in a moment.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -27,7 +30,9 @@ export default function SignInPhoneScreen() {
       await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
       router.push({ pathname: "/(auth)/verify-phone", params: { phone: trimmed } });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn't send code. Try again.");
+      // TODO(S-1.5): structured log to Sentry with the Clerk error code
+      console.error("sign-up phone: prepare failed", err);
+      setError("Couldn't send code. Try again.");
     } finally {
       setSubmitting(false);
     }

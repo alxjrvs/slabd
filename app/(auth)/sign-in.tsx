@@ -19,7 +19,10 @@ export default function SignInScreen() {
       setError("Enter a valid email address.");
       return;
     }
-    if (!isLoaded || !signUp) return;
+    if (!isLoaded || !signUp) {
+      setError("Sign-up isn't ready yet. Please try again in a moment.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -27,7 +30,9 @@ export default function SignInScreen() {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       router.push({ pathname: "/(auth)/verify-email", params: { email: trimmed } });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn't send code. Try again.");
+      // TODO(S-1.5): structured log to Sentry with the Clerk error code
+      console.error("sign-up email: prepare failed", err);
+      setError("Couldn't send code. Try again.");
     } finally {
       setSubmitting(false);
     }
