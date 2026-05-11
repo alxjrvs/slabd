@@ -1,6 +1,7 @@
 run_id: 2026-05-11-rename-slabd-to-sleeve
-status: in_flight
-phase: phase_bootstrap_complete
+status: shipped
+phase: phase_deliver_complete
+pr: 41
 planned_cycles: 2
 dep_graph:
   cycle-1: []
