@@ -29,6 +29,7 @@
     "expo-secure-store": "~15.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
+    "posthog-react-native": "4.45.3",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-native": "0.85.3",
