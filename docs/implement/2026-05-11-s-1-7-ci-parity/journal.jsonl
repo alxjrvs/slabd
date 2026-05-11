@@ -6,3 +6,7 @@
 {"ts":"2026-05-11T14:02:30Z","event":"phase_scaffold_complete","run_id":"2026-05-11-s-1-7-ci-parity","adr_count":1}
 {"ts":"2026-05-11T14:03:00Z","event":"phase_2_cycle_started","run_id":"2026-05-11-s-1-7-ci-parity","cycle_id":"cycle-1"}
 {"ts": "2026-05-11T00:00:00Z", "event": "phase_2_cycle_1_complete", "cycle": "cycle-1", "files_changed": 8, "tests": "16 suites / 83 tests"}
+{"ts": "2026-05-11T00:00:00Z", "event": "phase_3_integration_complete", "note": "no-op merge — single cycle on run branch"}
+{"ts": "2026-05-11T00:00:00Z", "event": "phase_4_review_complete", "verdict": "APPROVED-WITH-NOTES", "panel_size": 1}
+{"ts": "2026-05-11T00:00:00Z", "event": "phase_5_ship_complete", "pr": 39, "commits": 2}
+{"ts": "2026-05-11T00:00:00Z", "event": "phase_deliver_complete"}

@@ -1,6 +1,7 @@
 run_id: 2026-05-11-s-1-7-ci-parity
-status: in_flight
-phase: phase_2_cycle_1_complete
+status: shipped
+phase: phase_deliver_complete
+pr: 39
 planned_cycles: 1
 dep_graph:
   cycle-1: []
