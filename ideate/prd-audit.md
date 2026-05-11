@@ -20,7 +20,7 @@ _Completed: 2026-05-10 22:48 EDT_
 | # | Question | Answer | Impact |
 |---|----------|--------|--------|
 | 1 | What source materials do you have? | None — start from scratch | Triggers no-source path; all subsequent waves work from synthesized discovery |
-| 2 | What type of project is ComicApp? | Platform / marketplace | Frames the project as two-sided (buyers + sellers); shapes requirements for listings, transactions, trust |
+| 2 | What type of project is Sleeve? | Platform / marketplace | Frames the project as two-sided (buyers + sellers); shapes requirements for listings, transactions, trust |
 | 3 | What prompted this project? | Client / commercial need | Founder-led commercial venture; metrics-driven, runway-aware |
 | 4 | Who is the client / organization? | A startup founder / team | Pre-funded or early-funded startup; not a major publisher or established marketplace |
 
@@ -28,7 +28,7 @@ _Completed: 2026-05-10 22:48 EDT_
 
 | # | Question | Answer | Impact |
 |---|----------|--------|--------|
-| 5 | What core problem is ComicApp solving? | Rare comics marketplace — "An Infinite Longbox" — buyers and sellers transact via a Tinder-like interface. eBay, but with specific UX, mobile-first, for a niche market. | Establishes product name, core mechanic (swipe), positioning (eBay alternative), and target niche (rare comics). |
+| 5 | What core problem is Sleeve solving? | Rare comics marketplace — "An Infinite Longbox" — buyers and sellers transact via a Tinder-like interface. eBay, but with specific UX, mobile-first, for a niche market. | Establishes product name, core mechanic (swipe), positioning (eBay alternative), and target niche (rare comics). |
 | 6 | Filtering vs. swipe interface? | "We can filter more specifically, but the swipe interface remains." | Swipe is invariant — non-negotiable core UX. Filters narrow the deck but never replace it. |
 
 #### Users & Stakeholders
@@ -41,7 +41,7 @@ _Completed: 2026-05-10 22:48 EDT_
 
 | # | Question | Answer | Impact |
 |---|----------|--------|--------|
-| 8 | Closest competitor / alternative? | eBay | Primary point of comparison. ComicApp's pitch is "eBay, but the UX doesn't hurt." |
+| 8 | Closest competitor / alternative? | eBay | Primary point of comparison. Sleeve's pitch is "eBay, but the UX doesn't hurt." |
 | 9 | Primary differentiator? | Tinder-style swipe discovery | The bet. All other features are in service of preserving and enhancing the swipe loop. |
 
 #### Technical Constraints
@@ -49,7 +49,7 @@ _Completed: 2026-05-10 22:48 EDT_
 | # | Question | Answer | Impact |
 |---|----------|--------|--------|
 | 10 | Technology preferences? | Expo (React Native + Web) | Single codebase across iOS, Android, and web. Mobile-first; web is a first-class output of the same codebase. |
-| 11 | Transaction model? | Undecided | Flagged as open question. PRD must evaluate platform-escrow vs. direct vs. fulfillment-by-ComicApp. |
+| 11 | Transaction model? | Undecided | Flagged as open question. PRD must evaluate platform-escrow vs. direct vs. fulfillment-by-Sleeve. |
 | 12 | Seller trust model? | Undecided | Flagged as open question. PRD must evaluate open + ratings vs. vetted vs. tiered. |
 | 13 | How does inventory get cataloged? | All of the above, gradually — seller-supplied → catalog-assisted (e.g. GCD) → AI-assisted | v1 likely starts with seller-supplied + light catalog lookup; AI assistance layered in over time. Cataloging is the linchpin of swipe quality. |
 | 14 | How is "rare" defined? | Curator / marketplace hybrid | Featured curated decks (editorial/algo) over an open marketplace of all listings. Lets the brand stay "rare" while keeping inventory broad. |
@@ -69,14 +69,14 @@ _Completed: 2026-05-10 22:48 EDT_
 
 ### Synthesized Discovery
 
-# Discovery: ComicApp ("An Infinite Longbox")
+# Discovery: Sleeve ("An Infinite Longbox")
 
 > Synthetic source document produced through structured discovery Q&A.
 > This document serves as the primary input for the prd pipeline.
 
 ## Project Context
 
-**ComicApp** (working title; product name: **"An Infinite Longbox"**) is a two-sided marketplace for rare comics, commissioned by a startup founder/team as a commercial venture. The pitch is sharp: _"eBay for rare comics, but the UX doesn't hurt — built mobile-first, with a Tinder-style swipe-to-discover interface."_ The longbox metaphor evokes the physical experience of flipping through a collector's longbox at a shop or convention — the platform digitizes and infinitizes that ritual.
+**Sleeve** (working title; product name: **"An Infinite Longbox"**) is a two-sided marketplace for rare comics, commissioned by a startup founder/team as a commercial venture. The pitch is sharp: _"eBay for rare comics, but the UX doesn't hurt — built mobile-first, with a Tinder-style swipe-to-discover interface."_ The longbox metaphor evokes the physical experience of flipping through a collector's longbox at a shop or convention — the platform digitizes and infinitizes that ritual.
 
 ## Problem Space
 
@@ -91,7 +91,7 @@ The unmet need is a **dedicated, visual, mobile-first discovery experience for r
 
 ## Target Users & Stakeholders
 
-ComicApp serves four overlapping user types across both sides of the market:
+Sleeve serves four overlapping user types across both sides of the market:
 
 **Buyers**
 - _Rare / back-issue collectors_ — serious hunters chasing specific issues, variants, key books.
@@ -105,7 +105,7 @@ Note that the user types are not strictly bucketed — many collectors are also 
 
 ## Competitive Landscape
 
-| Competitor | Strength | Weakness ComicApp Exploits |
+| Competitor | Strength | Weakness Sleeve Exploits |
 |------------|----------|---------------------------|
 | eBay | Massive supply; trusted payments | Search-driven, desktop-feeling, hostile to visual browsing |
 | MyComicShop / Mile High | Catalog depth; trusted in collector circles | Web-1.0 UX, not mobile-friendly, not social/playful |
@@ -163,7 +163,7 @@ Timeline is undecided and funding-driven. The PRD should recommend a phased scop
 
 These were flagged as undecided during discovery and need resolution during requirements / architecture:
 
-1. **Transaction model.** Platform escrow vs. instant direct payment vs. fulfillment-by-ComicApp. Each has very different operational and trust implications.
+1. **Transaction model.** Platform escrow vs. instant direct payment vs. fulfillment-by-Sleeve. Each has very different operational and trust implications.
 2. **Seller trust model.** Fully open (ratings-based) vs. vetted (curator gatekeeps) vs. tiered (open + verified badge). This intersects with the curator/marketplace hybrid framing.
 3. **MVP timeline / scope ladder.** Funding-driven; PRD should propose validation-milestone-keyed phases rather than calendar dates.
 4. **Cataloging onramp.** v1 acceptable input format and quality bar for seller photos / metadata; how strict to be before launch.
@@ -254,7 +254,7 @@ No new Q&A — strategic opportunity framing was established in discovery (Q&A #
 1. **The visual-discovery wedge** — the strategic insight is that the *visual-browsing* segment of rare comics is the wedge. Not all rare-comics buyers — just the ones whose primary frustration is browsing UX. This subset is large enough to seed the marketplace and small enough to be ignored by eBay.
 2. **Brand-led, not price-led entry** — the metrics (Q&A #15: supply, engagement, press) explicitly exclude GMV. The opportunity is to win community attention first, then optimize transactions. This is the opposite of "lowest fees wins" and aligns with the curator/marketplace hybrid.
 3. **Sellers follow buyers** — the supply-side acquisition strategy is implicit: if buyers are engaged and visible, shop owners and dealers will list to reach them. The curator side (featured decks) is also a seller-acquisition tool (be featured = grow your visibility).
-4. **Cataloging onramp as long-term moat** — seller-supplied → catalog-assisted → AI-assisted listing is a multi-year roadmap that, if executed, makes ComicApp the fastest place to list. Listing speed is a defensible advantage even after the swipe UX is cloned.
+4. **Cataloging onramp as long-term moat** — seller-supplied → catalog-assisted → AI-assisted listing is a multi-year roadmap that, if executed, makes Sleeve the fastest place to list. Listing speed is a defensible advantage even after the swipe UX is cloned.
 5. **Format adjacency** — once the swipe primitive is proven, adjacent formats (variants, signed editions, original art, convention exclusives) extend the addressable market without changing the core mechanic.
 
 **Risk shape:**
@@ -294,14 +294,14 @@ The orchestrator's `qa: skip` mode means I made best-judgment calls on undecided
 
 | # | Topic | Assumption Made | Rationale | Where Surfaced |
 |---|---|---|---|---|
-| A1 | **Transaction model** | Platform-managed escrow via Stripe Connect (or equivalent). Payment captured at purchase; funds held until buyer confirms delivery or 7-day auto-release elapses post-delivery. | Most common marketplace pattern; balances buyer protection with operational simplicity. Avoids capital-intensive fulfillment-by-ComicApp; avoids unprotected direct-payment trust hole. | REQ-006, REQ-030; flagged Open in Discovery §7 |
+| A1 | **Transaction model** | Platform-managed escrow via Stripe Connect (or equivalent). Payment captured at purchase; funds held until buyer confirms delivery or 7-day auto-release elapses post-delivery. | Most common marketplace pattern; balances buyer protection with operational simplicity. Avoids capital-intensive fulfillment-by-Sleeve; avoids unprotected direct-payment trust hole. | REQ-006, REQ-030; flagged Open in Discovery §7 |
 | A2 | **Seller-trust model** | Tiered — open marketplace + verified badge. Anyone can list; verified status after KYC + 5 successful sales with no chargebacks. | Lets the platform launch fast without gatekeeping supply, while creating a visible quality signal for buyers and a meaningful incentive for sellers. | REQ-009; flagged Open in Discovery §7 |
 | A3 | **Authentication** | Email + phone OTP via a managed auth provider (Clerk / Supabase / Auth0). KYC is a separate, deferred step gated to seller verification or 1099-K threshold. | Lower sign-up friction; rare-comics buyers skew toward "create-and-forget" account behavior. | REQ-013, REQ-033 |
 | A4 | **Region** | US-only v1 (confirmed in discovery Q&A #17). Implies USD-only, English-only, US tax/KYC frameworks. | Explicit founder direction. | REQ-024, REQ-025 |
 | A5 | **Listing onramp** | v1 ships seller-supplied photos + metadata; catalog-assisted (GCD) is a Should (REQ-016); AI-assisted is a Could (REQ-019). | Discovery Q&A #13: "All of the above, gradually." Phased onramp. | REQ-004, REQ-016, REQ-019 |
 | A6 | **Curated decks ownership** | v1 curated decks are editorial (curator-selected); algorithmic curation comes with the recommendation engine (REQ-018, Could). | Editorial curation is cheaper to launch, doubles as a brand voice, and ladders cleanly into algorithmic over time. | REQ-003, REQ-018 |
 | A7 | **Greenfield project type** | Confirmed greenfield (repo is empty at discovery time). Foundational story will be required during ignite. | No existing codebase, no existing tooling. | Project Type field in PRD §1.0 |
-| A8 | **Shipping** | Seller-fulfilled with platform-purchased labels via a shipping aggregator. Not fulfillment-by-ComicApp. | Aligns with discovery's exclusion of consignment / fulfillment-by-ComicApp; cheapest, fastest path to functional shipping. | REQ-007, REQ-031 |
+| A8 | **Shipping** | Seller-fulfilled with platform-purchased labels via a shipping aggregator. Not fulfillment-by-Sleeve. | Aligns with discovery's exclusion of consignment / fulfillment-by-Sleeve; cheapest, fastest path to functional shipping. | REQ-007, REQ-031 |
 | A9 | **Performance baselines** | iPhone 13 / Pixel 6 as reference devices for 60fps swipe target; iOS 16+ / Android 10+ as minimum supported. | Modern-enough that React Native + Reanimated can hit 60fps reliably; broad enough device base. | REQ-012, REQ-020 |
 | A10 | **Compliance baseline** | PCI SAQ-A (tokenization-only), WCAG 2.1 AA, marketplace facilitator sales tax. No HIPAA / GDPR / CCPA-specific items in v1 (US-only narrows scope, but CCPA may still apply for CA residents — flag for legal). | Standard marketplace compliance floor for US. | REQ-023, REQ-025, REQ-027 |
 

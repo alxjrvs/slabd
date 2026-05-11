@@ -1,8 +1,10 @@
-# App Name Design — Slabd
+# App Name Design — Slabd (Superseded)
 
 **Date:** 2026-05-10
-**Status:** Selected (pending TM + domain verification)
-**Project:** ComicApp (working title) → **Slabd**
+**Status:** **Superseded** — replaced by Sleeve per [issue #40](https://github.com/alxjrvs/slabd/issues/40) on 2026-05-11. This spec is preserved as historical record of the original decision rationale; the live product name is now **Sleeve**.
+**Project:** ComicApp (working title) → **Slabd** (selected 2026-05-10) → **Sleeve** (renamed 2026-05-11)
+
+> **Reader note:** Everything below documents the *original* Slabd selection. It is intentionally left intact — do not retroactively edit the rationale, eliminated candidates, or verification list. Current brand-language guidance lives in [`2026-05-10-brand-language-design.md`](./2026-05-10-brand-language-design.md).
 
 ## Decision
 

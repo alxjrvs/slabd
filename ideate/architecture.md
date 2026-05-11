@@ -1,4 +1,4 @@
-# ComicApp Architecture
+# Sleeve Architecture
 **"An Infinite Longbox"**
 
 | Field | Value |
@@ -13,7 +13,7 @@
 
 ## 1. Introduction and Goals
 
-ComicApp ("An Infinite Longbox") is a mobile-first, Tinder-style swipe marketplace for rare comics, delivered as a single Expo (React Native + Web) codebase for iOS, Android, and Web. v1 is US-only fixed-price transactions with a curator/marketplace hybrid model. Live auctions, in-house grading, social features, and cross-border commerce are explicitly out of scope.
+Sleeve ("An Infinite Longbox") is a mobile-first, Tinder-style swipe marketplace for rare comics, delivered as a single Expo (React Native + Web) codebase for iOS, Android, and Web. v1 is US-only fixed-price transactions with a curator/marketplace hybrid model. Live auctions, in-house grading, social features, and cross-border commerce are explicitly out of scope.
 
 ### 1.1 Requirements Overview
 
@@ -1656,7 +1656,7 @@ Then results return within 500ms p95
 
 **As a** Platform
 **I want** core flows to meet WCAG 2.1 AA
-**So that** ComicApp is accessible
+**So that** Sleeve is accessible
 
 **Acceptance Criteria:**
 

@@ -2,9 +2,9 @@
 
 Ideate Phase
 Product Requirements Document
-ComicApp (startup founder/team)
+Sleeve (startup founder/team)
 
-**Product Requirements Document: ComicApp — "An Infinite Longbox"**
+**Product Requirements Document: Sleeve — "An Infinite Longbox"**
 
 ## 1.0 Document Overview
 
@@ -19,7 +19,7 @@ ComicApp (startup founder/team)
 
 ## 2.0 Executive Summary
 
-ComicApp ("An Infinite Longbox") is a mobile-first, Tinder-style swipe marketplace for rare comics. Sellers list back-issue and collectible comics; buyers discover them by swiping through filterable, curated and open-marketplace decks. The platform digitizes the experience of flipping through a longbox at a comic shop and pairs it with first-class mobile UX, a category eBay has neglected.
+Sleeve ("An Infinite Longbox") is a mobile-first, Tinder-style swipe marketplace for rare comics. Sellers list back-issue and collectible comics; buyers discover them by swiping through filterable, curated and open-marketplace decks. The platform digitizes the experience of flipping through a longbox at a comic shop and pairs it with first-class mobile UX, a category eBay has neglected.
 
 ### 2.1 The Initiative
 
@@ -57,7 +57,7 @@ Detailed targets are deferred to Section 6.0.
 
 ## 3.0 Background & Strategic Fit
 
-Rare comics today move through marketplaces never designed for the category. Buyers and sellers tolerate this because no dedicated alternative exists at meaningful scale. ComicApp's bet is that a mobile-first, swipe-driven discovery experience can pull buyers (and the sellers who follow them) out of these incumbent channels by making browsing materially more enjoyable than it is today.
+Rare comics today move through marketplaces never designed for the category. Buyers and sellers tolerate this because no dedicated alternative exists at meaningful scale. Sleeve's bet is that a mobile-first, swipe-driven discovery experience can pull buyers (and the sellers who follow them) out of these incumbent channels by making browsing materially more enjoyable than it is today.
 
 ### 3.1 Problem Statement
 
@@ -72,12 +72,12 @@ Collectors put up with this because nothing better exists. Sellers — especiall
 
 ### 3.2 Goal & Opportunity
 
-The strategic opportunity is to capture the **visual-discovery wedge** of the rare comics market — the segment of buyers and sellers whose primary frustration is not price or selection but the act of browsing. The wedge is narrow on purpose: by refusing to be "eBay for everything," ComicApp can deliver a UX that eBay structurally cannot match, then expand from there.
+The strategic opportunity is to capture the **visual-discovery wedge** of the rare comics market — the segment of buyers and sellers whose primary frustration is not price or selection but the act of browsing. The wedge is narrow on purpose: by refusing to be "eBay for everything," Sleeve can deliver a UX that eBay structurally cannot match, then expand from there.
 
 **Strategic plays the wedge enables:**
 
 1. **Brand-first launch**: a clean, beautiful swipe experience generates comics-community press and influencer adoption (one of the 6-month success metrics) far more readily than yet-another-marketplace.
-2. **Sellers follow the buyers**: shop owners and dealers will list where engaged buyers are, even at lower take-rates than they're used to elsewhere. The curator/marketplace hybrid (Section 5.0) means ComicApp can launch with a small curated inventory while open-marketplace supply ramps.
+2. **Sellers follow the buyers**: shop owners and dealers will list where engaged buyers are, even at lower take-rates than they're used to elsewhere. The curator/marketplace hybrid (Section 5.0) means Sleeve can launch with a small curated inventory while open-marketplace supply ramps.
 3. **AI-assisted listing as a moat**: cataloging is the long-term technical linchpin. v1 ships with seller-supplied content, but catalog-assisted (GCD lookup) and AI-assisted (auto-detect from photo) listing flows are the path to listing speed sellers can't get elsewhere.
 4. **Format adjacency**: the same swipe-discovery primitive extends to variants, signed editions, original art, conventions exclusives — categories underserved by general marketplaces and primed for niche curation.
 
@@ -104,7 +104,7 @@ The risk shape is product-market fit (will collectors actually adopt swipe-as-se
 
 ### 3.4 Pain Points with Existing Systems
 
-| Channel | Pain Point | ComicApp Response |
+| Channel | Pain Point | Sleeve Response |
 |---|---|---|
 | eBay | Search-first UX; no visual browsing; desktop-shaped on mobile | Swipe-first discovery; mobile-native gestures |
 | eBay | Listing flow is generic; comic-specific metadata is buried | Comics-aware listing fields (series, issue, variant, grade) with future catalog lookup |
@@ -121,7 +121,7 @@ The risk shape is product-market fit (will collectors actually adopt swipe-as-se
 
 ### 3.5 Competitive Landscape
 
-| Competitor | Strengths | Weaknesses | Gap ComicApp Exploits |
+| Competitor | Strengths | Weaknesses | Gap Sleeve Exploits |
 |---|---|---|---|
 | **eBay** | Massive supply; trusted payments; broad buyer base | Search-driven; visually flat; mobile is a port of desktop; comics metadata is shallow | Visual-first, mobile-native discovery; comics-aware listing |
 | **MyComicShop / Mile High** (specialty dealer sites) | Deep, structured catalog; trusted in collector circles; quality grading | Web-1.0 UX; not mobile-first; not social; not playful | Modern discovery UX; community feel; mobile gesture polish |
@@ -135,7 +135,7 @@ The risk shape is product-market fit (will collectors actually adopt swipe-as-se
 - Search and filter by series/issue/grade.
 - Seller ratings or verification.
 
-**Divergent differentiators** (ComicApp's specific bets):
+**Divergent differentiators** (Sleeve's specific bets):
 - **Swipe-driven discovery** as the primary browsing mechanic.
 - **Mobile-first** native gestures via Expo / React Native.
 - **Curator/marketplace hybrid** — featured decks alongside open inventory.
@@ -157,7 +157,7 @@ Three personas span the four user types identified in discovery. They are not mu
 | **Description** | A collector with a specific want-list: key issues, variants, signed editions, specific runs. Has been collecting for 10+ years; spends $200–$2000/month. Active on multiple existing channels (eBay, Facebook groups, Heritage). |
 | **Goals** | Find specific issues at fair prices. Trust the grading. Build out runs efficiently. Get alerted when a wanted issue surfaces. |
 | **Pain points** | eBay's UX makes browsing tedious; misgrades on Facebook groups burn time and money; auction-only sites lock out the buy-now mindset. |
-| **What ComicApp delivers** | Filterable swipe deck for fast hunt sessions; want-lists (Should-Have, REQ-015); verified-seller signal (REQ-009); structured dispute path for grade misrepresentation (REQ-011). |
+| **What Sleeve delivers** | Filterable swipe deck for fast hunt sessions; want-lists (Should-Have, REQ-015); verified-seller signal (REQ-009); structured dispute path for grade misrepresentation (REQ-011). |
 | **What earns their adoption** | Supply density in their niche + verified-seller credibility. They will validate quickly whether the platform is worth their time. |
 
 ### Persona 2 — "The Browser" (Casual / Nostalgia Buyer)
@@ -167,7 +167,7 @@ Three personas span the four user types identified in discovery. They are not mu
 | **Description** | Reconnecting with childhood favorites or following a creator they like. Spends $20–$150/month, in bursts. Not actively hunting — discovery-driven. |
 | **Goals** | Enjoy browsing comics again. Stumble onto interesting issues without effort. Buy on impulse without a complicated checkout. |
 | **Pain points** | eBay search requires knowing what you want; specialty dealer sites are intimidating; no platform makes browsing actually fun. |
-| **What ComicApp delivers** | Swipe-driven discovery (REQ-001) — the core mechanic is built for this persona. Curated decks (REQ-003) lower the barrier to "what should I look at?". 2-tap purchase (REQ-005). |
+| **What Sleeve delivers** | Swipe-driven discovery (REQ-001) — the core mechanic is built for this persona. Curated decks (REQ-003) lower the barrier to "what should I look at?". 2-tap purchase (REQ-005). |
 | **What earns their adoption** | The swipe loop has to feel good. Press / influencer-driven discovery (one of the 6-month metrics) is how this persona finds the app. |
 
 ### Persona 3 — "The Operator" (LCS Owner or Pro/Semi-Pro Dealer)
@@ -177,7 +177,7 @@ Three personas span the four user types identified in discovery. They are not mu
 | **Description** | A comic shop owner or full/part-time dealer with hundreds-to-thousands of back-issue SKUs. Already listing on eBay; tired of fees, listing time, and disputes. |
 | **Goals** | Move inventory faster. Spend less time per listing. Build a reputation that compounds. Reach buyers eBay's UX hides. |
 | **Pain points** | Listing time on eBay is high; comics metadata doesn't map cleanly to eBay categories; chargebacks and return abuse; algorithm changes that surface lower-quality listings over theirs. |
-| **What ComicApp delivers** | Fast listing flow with seller-supplied → catalog → AI onramp (REQ-004, REQ-016, REQ-019); seller dashboard (REQ-017); verified-tier as a visible quality signal (REQ-009); first-party dispute resolution (REQ-011). |
+| **What Sleeve delivers** | Fast listing flow with seller-supplied → catalog → AI onramp (REQ-004, REQ-016, REQ-019); seller dashboard (REQ-017); verified-tier as a visible quality signal (REQ-009); first-party dispute resolution (REQ-011). |
 | **What earns their adoption** | Buyer engagement first. They will list where the buyers are. The brand-led launch (curated decks, press) is the unlock for this persona. |
 
 ### 4.1 User Stories
@@ -219,7 +219,7 @@ Detailed acceptance criteria for the stories below live with each requirement in
 | **REQ-009** | **Seller trust signals — tiered (open + verified badge)** — anyone can list; verified sellers display a badge after identity + selling history checks. (Open: see audit assumption A2.) | As a buyer, I want to see verified-seller status so I can weight my risk on higher-value purchases. | Given a seller has completed verification (KYC + 5 completed sales with no chargebacks), when their listings appear in any feed, then a verified badge is rendered on the card. | Must |
 | **REQ-010** | **Buyer ratings of sellers** — post-transaction rating (1–5 stars + optional written review) on grade accuracy, packaging, and speed. | As a buyer, I want to rate the seller so future buyers benefit from my experience. | Given a completed transaction (funds released), when 24h elapse, then the buyer is prompted to rate; rating posts to the seller profile and contributes to the verified-tier eligibility calculation. | Must |
 | **REQ-011** | **Dispute / claim flow** — buyer can file a claim within the escrow window for non-delivery, misgrade, or counterfeit. Platform mediates; funds remain in escrow during review. | As a buyer, I want a clear claim path when a comic arrives misgraded so I'm not stranded with a bad book. | Given a buyer in the escrow window, when they file a claim with evidence (photos, description), then funds freeze, the seller is notified with a response SLA, and platform mediation resolves within 7 business days. | Must |
-| **REQ-012** | **Cross-platform delivery — iOS, Android, Web via Expo** — single codebase; mobile is primary; web is a first-class output. | As a user, I want to use ComicApp on whichever device is convenient so my choice of platform isn't a constraint. | Given any supported platform (iOS 16+, Android 10+, modern web browser), when the user signs in, then they access the full feature set with platform-appropriate gestures (touch swipe on mobile, click/drag on web). | Must |
+| **REQ-012** | **Cross-platform delivery — iOS, Android, Web via Expo** — single codebase; mobile is primary; web is a first-class output. | As a user, I want to use Sleeve on whichever device is convenient so my choice of platform isn't a constraint. | Given any supported platform (iOS 16+, Android 10+, modern web browser), when the user signs in, then they access the full feature set with platform-appropriate gestures (touch swipe on mobile, click/drag on web). | Must |
 | **REQ-013** | **Authentication — email + phone** — sign-up and sign-in with email and phone; SMS or magic-link OTP for verification. KYC layered on top for seller verification. | As a user, I want a quick sign-in so I'm not deterred at the front door. | Given a new user, when they enter their phone or email, then they receive an OTP and complete sign-up within 90 seconds without additional friction (KYC happens later, at seller-verification step). | Must |
 | **REQ-014** | **Push and email notifications** — order paid, shipped, delivered, rated; claims filed/resolved; new listings matching saved filters (post-launch). | As a seller, I want push notifications when a comic sells so I can ship fast and protect my rating. | Given a user opted in to notifications, when a transactional event occurs (paid, shipped, delivered, claim opened), then a push notification is delivered within 30 seconds; email is sent in parallel for durability. | Should |
 | **REQ-015** | **Want-lists and saved filter alerts** — buyers save a filter combination; receive alerts when new listings match. | As a buyer hunting a specific variant, I want alerts so I don't miss listings that match my hunt. | Given a buyer saves a filter combination as a want-list, when a new listing matches, then a notification is queued and delivered within 5 minutes. | Should |
@@ -235,7 +235,7 @@ Detailed acceptance criteria for the stories below live with each requirement in
 | **REQ-020** | **Swipe gesture performance** — the swipe deck must feel native on mobile. | Frame rate during swipe gesture, measured on iPhone 13 / Pixel 6 baseline devices. | ≥60fps sustained, ≥58fps p95 across a 100-card session. | Must |
 | **REQ-021** | **Image load latency in deck** — preload the next N cards (N≥3) to keep the deck visually populated. | Time from "card index advances" to "next card image fully rendered" on Wi-Fi and LTE. | <100ms on Wi-Fi; <300ms p95 on LTE; no visible spinner while the user is actively swiping (≥1 swipe per 2 seconds). | Must |
 | **REQ-022** | **Payment & transaction durability** — order state and funds-holding must survive crashes and provider outages. | Order-state recovery tests; payment provider webhook idempotency tests. | Zero lost orders or double-charges over 10,000 simulated transactions. | Must |
-| **REQ-023** | **PCI compliance via processor** — never store raw card data on platform infrastructure. | PCI SAQ-A scope, verified by integration pattern (tokenization-only with Stripe or equivalent). | SAQ-A scope; no PAN, CVV, or expiry stored or logged on ComicApp systems. | Must |
+| **REQ-023** | **PCI compliance via processor** — never store raw card data on platform infrastructure. | PCI SAQ-A scope, verified by integration pattern (tokenization-only with Stripe or equivalent). | SAQ-A scope; no PAN, CVV, or expiry stored or logged on Sleeve systems. | Must |
 | **REQ-024** | **Marketplace KYC for high-volume sellers** — gate KYC at the IRS 1099-K threshold ($600 gross in a calendar year, US) and verified-tier qualification. | Threshold trigger logs; Stripe Connect (or equivalent) KYC completion events. | 100% of sellers crossing threshold either complete KYC or are payout-blocked. | Must |
 | **REQ-025** | **Sales tax — US marketplace facilitator compliance** — calculate, collect, and remit sales tax in all states with marketplace facilitator laws. | Integration with a tax-calc provider (TaxJar, Avalara) + remittance audit trail. | 100% of taxable transactions in covered states include correct tax at checkout. | Must |
 | **REQ-026** | **Counterfeit / IP takedown process** — defined policy and tooling to suspend listings, freeze funds, and respond to verified counterfeit reports. | Time from verified report to listing takedown; escalation rate. | <24h takedown SLA for verified reports; documented appeal path. | Must |
@@ -260,12 +260,12 @@ Detailed acceptance criteria for the stories below live with each requirement in
 
 | Item | Rationale | Reconsideration Trigger |
 |---|---|---|
-| **Live auctions / bidding** | Whatnot owns the live-auction mindshare; ComicApp's bet is asynchronous browse-and-buy. Different UX, different operational complexity. | Once browse-and-buy is validated and supply is liquid, evaluate live auctions as a format extension. |
+| **Live auctions / bidding** | Whatnot owns the live-auction mindshare; Sleeve's bet is asynchronous browse-and-buy. Different UX, different operational complexity. | Once browse-and-buy is validated and supply is liquid, evaluate live auctions as a format extension. |
 | **In-house grading or authentication** | Operational moat takes years to build (CGC, CBCS). v1 relies on seller-supplied grades and dispute resolution. | If counterfeit/misgrade dispute rate exceeds 2% of completed transactions, revisit. |
 | **Social features — follow, public feed, DMs** | Out of scope by founder direction. Discovery loop is the brand; social graph dilutes focus. | Re-evaluate post-PMF; consider seller-storefront and buyer-collection features ahead of social graph. |
 | **International / cross-border transactions** | KYC, tax, customs, currency complexity. US-only v1. | Expand to Canada first (low complexity delta) once US ops are steady-state. |
 | **Multi-currency** | Implied by US-only constraint. | Driven by international expansion. |
-| **Consignment / fulfillment-by-ComicApp** | Capital-intensive (warehouse, staff, insurance). Out-of-scope per discovery transaction-model evaluation. | Re-evaluate when high-end ($1k+) listings become >10% of GMV. |
+| **Consignment / fulfillment-by-Sleeve** | Capital-intensive (warehouse, staff, insurance). Out-of-scope per discovery transaction-model evaluation. | Re-evaluate when high-end ($1k+) listings become >10% of GMV. |
 | **Trade / swap mechanics** | No transaction-revenue model; complicates dispute and tax handling. | Speculative; defer indefinitely. |
 | **NFT or digital comics** | Not part of the rare-comics buyer/seller behavior loop. | Out of brand scope. |
 | **Native desktop applications** | Web (via Expo) is the desktop surface. | None planned. |
@@ -341,7 +341,7 @@ Risk score = Impact (1–5) × Likelihood (1–5).
 
 The assumptions made during requirements (audit A1–A10) are the load-bearing strategic decisions for v1. If any of these change in founder review or architecture, requirements should be revisited:
 
-- **A1 — Platform escrow** (vs. direct payment or fulfillment-by-ComicApp). Affects REQ-006, REQ-030, dispute flow, capital requirements.
+- **A1 — Platform escrow** (vs. direct payment or fulfillment-by-Sleeve). Affects REQ-006, REQ-030, dispute flow, capital requirements.
 - **A2 — Tiered open + verified trust model** (vs. fully vetted gatekeeper). Affects REQ-009 and brand positioning.
 - **A4 — US-only v1** (already explicit, but worth flagging: any cross-border push reshapes KYC, tax, currency, shipping).
 - **A6 — Editorial-first curation** (vs. algorithmic). Affects REQ-003 and brand voice.
@@ -352,7 +352,7 @@ The assumptions made during requirements (audit A1–A10) are the load-bearing s
 
 | Term | Definition |
 |---|---|
-| **Back issue** | A comic issue no longer in current print release; the secondary-market category ComicApp serves. |
+| **Back issue** | A comic issue no longer in current print release; the secondary-market category Sleeve serves. |
 | **CGC / CBCS** | Major third-party grading services that encapsulate comics in tamper-evident slabs with a numeric grade (1.0–10.0). |
 | **Curated deck** | A swipe-able collection of listings selected editorially (v1) or algorithmically (post-PMF). Sits alongside the open marketplace. |
 | **Deck** | The stack of listing cards a user is currently swiping through. May be the open marketplace, a curated deck, or a filtered subset. |

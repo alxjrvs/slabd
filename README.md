@@ -1,4 +1,4 @@
-# Slabd
+# Sleeve
 
 **"An Infinite Longbox"** — a mobile-first, Tinder-style swipe marketplace for rare comics.
 
