@@ -1,32 +1,9 @@
-import { StyleSheet } from "react-native";
+import { Redirect } from "expo-router";
 
-import { Text, View } from "~/components/ds";
+import { useAuth } from "~/lib/auth";
 
-export default function Home() {
-  return (
-    <View surface="bg" style={styles.container}>
-      <Text variant="title" style={styles.title}>
-        Slabd
-      </Text>
-      <Text muted style={styles.subtitle}>
-        An Infinite Longbox
-      </Text>
-    </View>
-  );
+export default function Index() {
+  const { isLoaded, isSignedIn } = useAuth();
+  if (!isLoaded) return null;
+  return <Redirect href={isSignedIn ? "/(app)" : "/(auth)/sign-in"} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  title: {
-    fontSize: 48,
-    letterSpacing: -1,
-  },
-  subtitle: {
-    marginTop: 8,
-  },
-});
