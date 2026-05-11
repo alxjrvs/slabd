@@ -65,6 +65,9 @@ export const logger = {
   error(message: string, data?: Record<string, unknown>) {
     emit("error", message, data);
   },
+  // Sync-only. The stack pops in the `finally` of the wrapping call, so any
+  // `await` inside `fn` will see the popped value on resume. For async flows,
+  // pass the correlation id explicitly through `data.correlation_id`.
   withCorrelationId<T>(id: string, fn: () => T): T {
     correlationStack.push(id);
     try {

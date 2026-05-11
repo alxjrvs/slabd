@@ -28,9 +28,19 @@ export function buildSentryConfig(env: Record<string, string | undefined> = proc
       : undefined) ??
     "dev";
 
+  const bundleId =
+    Constants.expoConfig?.ios?.bundleIdentifier ??
+    Constants.expoConfig?.android?.package ??
+    Constants.expoConfig?.slug ??
+    "app";
+  const version = Constants.expoConfig?.version ?? "0.0.0";
+
+  // Release format matches `@sentry/react-native`'s source-map upload default
+  // (`bundleId@version+commitSha`) so symbolication artifacts resolve in prod.
+  // `dist` distinguishes builds within a release — runtime version is stable.
   return {
     dsn,
-    release: String(commitSha),
+    release: `${bundleId}@${version}+${commitSha}`,
     dist: String(runtimeVersion),
     environment: env.EXPO_PUBLIC_SENTRY_ENV ?? (__DEV__ ? "development" : "production"),
     enableAutoSessionTracking: true,

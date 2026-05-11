@@ -15,6 +15,10 @@ jest.mock("expo-constants", () => ({
   default: {
     expoConfig: {
       runtimeVersion: "1.0.0",
+      version: "0.0.1",
+      slug: "slabd",
+      ios: { bundleIdentifier: "com.slabd.app" },
+      android: { package: "com.slabd.app" },
       extra: { commitSha: "test-sha" },
     },
   },
@@ -36,7 +40,7 @@ describe("buildSentryConfig (AC-3)", () => {
     /* env is Record<string, string | undefined> so {} satisfies it */
   });
 
-  it("tags release with EAS_BUILD_COMMIT_SHA and dist with EAS_BUILD_RUNTIME_VERSION", () => {
+  it("formats release as bundleId@version+commitSha and dist as runtime version", () => {
     const cfg = buildSentryConfig({
       EXPO_PUBLIC_SENTRY_DSN: "https://example.ingest.sentry.io/1",
       EAS_BUILD_COMMIT_SHA: "abc1234",
@@ -44,7 +48,7 @@ describe("buildSentryConfig (AC-3)", () => {
     });
     expect(cfg).toMatchObject({
       dsn: "https://example.ingest.sentry.io/1",
-      release: "abc1234",
+      release: "com.slabd.app@0.0.1+abc1234",
       dist: "2.4.0",
     });
   });
@@ -53,7 +57,10 @@ describe("buildSentryConfig (AC-3)", () => {
     const cfg = buildSentryConfig({
       EXPO_PUBLIC_SENTRY_DSN: "https://example.ingest.sentry.io/1",
     });
-    expect(cfg).toMatchObject({ release: "test-sha", dist: "1.0.0" });
+    expect(cfg).toMatchObject({
+      release: "com.slabd.app@0.0.1+test-sha",
+      dist: "1.0.0",
+    });
   });
 });
 
