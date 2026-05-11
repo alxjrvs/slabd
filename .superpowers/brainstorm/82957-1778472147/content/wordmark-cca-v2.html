@@ -1,0 +1,72 @@
+<h2>App icon — Faithful CCA Parody, refined</h2>
+<p class="subtitle">Rim text moved above the inner line — sits cleanly in the band between the two rings, the way a real CCA stamp reads. Same direction (A · Faithful Parody), tighter execution. Showing the icon at two sizes so you can see how it holds up at Home-screen scale.</p>
+
+<div class="section" style="background:#F7F4ED; padding:48px 24px; border-radius:12px; margin-bottom:32px;">
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;">
+
+    <!-- LARGE: marketing scale -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="width:240px; height:240px;">
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+          <defs>
+            <!-- Text path lives in the band between inner (r=38) and outer (r=48). Path radius = 43. -->
+            <path id="circle-large" d="M 50,50 m 0,-43 a 43,43 0 1,1 0,86 a 43,43 0 1,1 0,-86" />
+          </defs>
+
+          <!-- outer ring -->
+          <circle cx="50" cy="50" r="48" fill="#F7F4ED" stroke="#0F1B2D" stroke-width="1.8"/>
+          <!-- inner ring -->
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#0F1B2D" stroke-width="0.8"/>
+
+          <!-- rim text in the band -->
+          <text font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="6" fill="#0F1B2D" letter-spacing="1.8">
+            <textPath href="#circle-large" startOffset="0">APPROVED ★ BY ★ THE ★ SLABD ★ COMICS ★ MARKETPLACE ★</textPath>
+          </text>
+
+          <!-- center S -->
+          <text x="50" y="56" font-family="Arial Narrow, Helvetica Neue Condensed, sans-serif" font-size="44" font-weight="900" fill="#0F1B2D" text-anchor="middle" letter-spacing="-1" dominant-baseline="middle">S</text>
+        </svg>
+      </div>
+      <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">Marketing · 240×240</div>
+    </div>
+
+    <!-- SMALL: home-screen scale -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="width:64px; height:64px; box-shadow:0 6px 16px rgba(15,27,45,0.18); border-radius:14px; overflow:hidden;">
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+          <defs>
+            <path id="circle-small" d="M 50,50 m 0,-43 a 43,43 0 1,1 0,86 a 43,43 0 1,1 0,-86" />
+          </defs>
+          <rect width="100" height="100" fill="#F7F4ED"/>
+          <circle cx="50" cy="50" r="48" fill="#F7F4ED" stroke="#0F1B2D" stroke-width="1.8"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#0F1B2D" stroke-width="0.8"/>
+          <text font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="6" fill="#0F1B2D" letter-spacing="1.8">
+            <textPath href="#circle-small" startOffset="0">APPROVED ★ BY ★ THE ★ SLABD ★ COMICS ★ MARKETPLACE ★</textPath>
+          </text>
+          <text x="50" y="56" font-family="Arial Narrow, Helvetica Neue Condensed, sans-serif" font-size="44" font-weight="900" fill="#0F1B2D" text-anchor="middle" letter-spacing="-1" dominant-baseline="middle">S</text>
+        </svg>
+      </div>
+      <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">App Icon · 64×64</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confirm panel -->
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Approve — lock the icon</h3>
+      <p>The rim sits above the inner line; reads correctly at both sizes. Move on to writing the brand language spec.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">↻</div>
+    <div class="content">
+      <h3>Adjust — describe what's still off</h3>
+      <p>Bigger center S? Different rim copy? Tighter outer ring? Tell me in the terminal and I'll iterate.</p>
+    </div>
+  </div>
+</div>

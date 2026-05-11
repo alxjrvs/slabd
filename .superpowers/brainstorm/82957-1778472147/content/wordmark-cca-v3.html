@@ -1,0 +1,67 @@
+<h2>App icon — rim text equidistant in the band</h2>
+<p class="subtitle">Path radius dropped to r=41 so the text's cap-height is visually centered at r=43 — the geometric midpoint between inner ring (r=38) and outer ring (r=48). Same icon, same direction, just the rim positioning corrected.</p>
+
+<div class="section" style="background:#F7F4ED; padding:48px 24px; border-radius:12px; margin-bottom:32px;">
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;">
+
+    <!-- LARGE -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="width:240px; height:240px;">
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+          <defs>
+            <!-- Path radius 41 -> baseline sits at r=41. Cap-height (~4.2 at fs=6) puts cap-tops at ~r=45.2. Visual center of glyphs ≈ r=43, equidistant from r=38 and r=48. -->
+            <path id="circle-eq-large" d="M 50,50 m 0,-41 a 41,41 0 1,1 0,82 a 41,41 0 1,1 0,-82" />
+          </defs>
+
+          <circle cx="50" cy="50" r="48" fill="#F7F4ED" stroke="#0F1B2D" stroke-width="1.8"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#0F1B2D" stroke-width="0.8"/>
+
+          <text font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="6" fill="#0F1B2D" letter-spacing="1.8">
+            <textPath href="#circle-eq-large" startOffset="0">APPROVED ★ BY ★ THE ★ SLABD ★ COMICS ★ MARKETPLACE ★</textPath>
+          </text>
+
+          <text x="50" y="56" font-family="Arial Narrow, Helvetica Neue Condensed, sans-serif" font-size="44" font-weight="900" fill="#0F1B2D" text-anchor="middle" letter-spacing="-1" dominant-baseline="middle">S</text>
+        </svg>
+      </div>
+      <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">Marketing · 240×240</div>
+    </div>
+
+    <!-- SMALL -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="width:64px; height:64px; box-shadow:0 6px 16px rgba(15,27,45,0.18); border-radius:14px; overflow:hidden;">
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+          <defs>
+            <path id="circle-eq-small" d="M 50,50 m 0,-41 a 41,41 0 1,1 0,82 a 41,41 0 1,1 0,-82" />
+          </defs>
+          <rect width="100" height="100" fill="#F7F4ED"/>
+          <circle cx="50" cy="50" r="48" fill="#F7F4ED" stroke="#0F1B2D" stroke-width="1.8"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#0F1B2D" stroke-width="0.8"/>
+          <text font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="6" fill="#0F1B2D" letter-spacing="1.8">
+            <textPath href="#circle-eq-small" startOffset="0">APPROVED ★ BY ★ THE ★ SLABD ★ COMICS ★ MARKETPLACE ★</textPath>
+          </text>
+          <text x="50" y="56" font-family="Arial Narrow, Helvetica Neue Condensed, sans-serif" font-size="44" font-weight="900" fill="#0F1B2D" text-anchor="middle" letter-spacing="-1" dominant-baseline="middle">S</text>
+        </svg>
+      </div>
+      <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">App Icon · 64×64</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Approve — lock the icon</h3>
+      <p>Rim cap-height is now centered between the two rings. Move on to writing the brand language spec.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">↻</div>
+    <div class="content">
+      <h3>Adjust — describe what's still off</h3>
+      <p>Tell me in the terminal — bigger S, tighter rim, different rim copy, etc.</p>
+    </div>
+  </div>
+</div>

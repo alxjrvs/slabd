@@ -1,0 +1,130 @@
+<h2>Wordmark — three directions</h2>
+<p class="subtitle">All set in Oswald (condensed sans). Each direction shows the <strong>wordmark</strong> (header / marketing use) and the <strong>app icon</strong> (Home-screen, 64×64) together — they need to read as one system. Palette is Catalog Index: warm-white / deep-ink / vermilion / muted-gold.</p>
+
+<div class="cards">
+
+  <!-- ===== Direction A: Pure type ===== -->
+  <div class="card" data-choice="pure-type" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0; min-height:380px; display:flex; flex-direction:column; background:#F7F4ED;">
+
+      <!-- Wordmark -->
+      <div style="padding:48px 32px 24px; display:flex; align-items:center; justify-content:center;">
+        <div style="font-family:'Arial Narrow','Helvetica Neue Condensed', sans-serif; font-weight:600; font-size:64px; color:#0F1B2D; letter-spacing:0.01em; line-height:1;">SLABD</div>
+      </div>
+
+      <!-- Tagline / treatment -->
+      <div style="padding:0 32px; text-align:center;">
+        <div style="font-family:'Courier New', monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#0F1B2D; opacity:0.5;">— Marketplace for Graded Comics —</div>
+      </div>
+
+      <div style="flex:1;"></div>
+
+      <!-- App icon -->
+      <div style="padding:24px 32px 32px; display:flex; align-items:center; gap:16px; border-top:1px solid rgba(15,27,45,0.1);">
+        <div style="width:64px; height:64px; background:#0F1B2D; border-radius:14px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(15,27,45,0.15);">
+          <span style="font-family:'Arial Narrow', sans-serif; font-weight:600; color:#F7F4ED; font-size:38px; line-height:1; letter-spacing:-0.02em;">S</span>
+        </div>
+        <div>
+          <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">App Icon</div>
+          <div style="font-family:-apple-system,sans-serif; font-size:13px; color:#0F1B2D; margin-top:2px;">Single letter S, condensed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · Pure Type</h3>
+      <p><strong>Wordmark:</strong> "SLABD" in Oswald, no marks, no enclosure.<br>
+      <strong>App icon:</strong> Single S on deep ink, rounded square.<br>
+      <strong>Says:</strong> "We don't need a logo, the name <em>is</em> the logo." Quiet, confident.<br>
+      <strong>Trade-off:</strong> Lowest distinctiveness — the work is all in the type. App icon is also the most generic of the three (every fintech starts with an S).</p>
+    </div>
+  </div>
+
+  <!-- ===== Direction B: Slab bracket ===== -->
+  <div class="card" data-choice="slab-bracket" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0; min-height:380px; display:flex; flex-direction:column; background:#F7F4ED;">
+
+      <!-- Wordmark with slab brackets -->
+      <div style="padding:48px 32px 24px; display:flex; align-items:center; justify-content:center; gap:12px;">
+        <div style="width:8px; height:64px; background:#0F1B2D;"></div>
+        <div style="font-family:'Arial Narrow','Helvetica Neue Condensed', sans-serif; font-weight:600; font-size:60px; color:#0F1B2D; letter-spacing:0.01em; line-height:1;">SLABD</div>
+        <div style="width:8px; height:64px; background:#C1432F;"></div>
+      </div>
+
+      <!-- Tagline -->
+      <div style="padding:0 32px; text-align:center;">
+        <div style="font-family:'Courier New', monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#0F1B2D; opacity:0.5;">Encased · Authenticated · Listed</div>
+      </div>
+
+      <div style="flex:1;"></div>
+
+      <!-- App icon -->
+      <div style="padding:24px 32px 32px; display:flex; align-items:center; gap:16px; border-top:1px solid rgba(15,27,45,0.1);">
+        <div style="width:64px; height:64px; background:#F7F4ED; border-radius:14px; box-shadow:0 4px 12px rgba(15,27,45,0.15); position:relative; overflow:hidden;">
+          <div style="position:absolute; left:0; top:0; bottom:0; width:8px; background:#0F1B2D;"></div>
+          <div style="position:absolute; right:0; top:0; bottom:0; width:8px; background:#C1432F;"></div>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Arial Narrow',sans-serif; font-weight:600; color:#0F1B2D; font-size:32px; line-height:1; letter-spacing:0;">S</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">App Icon</div>
+          <div style="font-family:-apple-system,sans-serif; font-size:13px; color:#0F1B2D; margin-top:2px;">S between two slab edges — encased.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · Slab Bracket</h3>
+      <p><strong>Wordmark:</strong> "SLABD" with two vertical bars — left in ink, right in vermilion. The bars <em>are</em> the slab's edges.<br>
+      <strong>App icon:</strong> Letter S encased between the same two bars. Reads as a tiny graded slab from across the room.<br>
+      <strong>Says:</strong> "The thing in the case is the brand." Literal encapsulation iconography.<br>
+      <strong>Trade-off:</strong> Slightly literal — depends on whether the slab metaphor lands fast.</p>
+    </div>
+  </div>
+
+  <!-- ===== Direction C: Stamp seal ===== -->
+  <div class="card" data-choice="stamp-seal" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:0; min-height:380px; display:flex; flex-direction:column; background:#F7F4ED;">
+
+      <!-- Wordmark inside stamp -->
+      <div style="padding:48px 32px 24px; display:flex; align-items:center; justify-content:center;">
+        <div style="border:2px solid #0F1B2D; padding:14px 28px 12px; display:inline-flex; flex-direction:column; align-items:center; position:relative;">
+          <div style="font-family:'Courier New', monospace; font-size:9px; letter-spacing:0.32em; text-transform:uppercase; color:#0F1B2D;">Cert. No. ━━━</div>
+          <div style="font-family:'Arial Narrow','Helvetica Neue Condensed', sans-serif; font-weight:600; font-size:48px; color:#0F1B2D; letter-spacing:0.02em; line-height:1; margin:4px 0;">SLABD</div>
+          <div style="font-family:'Courier New', monospace; font-size:9px; letter-spacing:0.32em; text-transform:uppercase; color:#0F1B2D;">Est. MMXXVI</div>
+        </div>
+      </div>
+
+      <!-- Tagline -->
+      <div style="padding:0 32px; text-align:center;">
+        <div style="font-family:'Courier New', monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#C1432F;">Marketplace · Authenticated</div>
+      </div>
+
+      <div style="flex:1;"></div>
+
+      <!-- App icon -->
+      <div style="padding:24px 32px 32px; display:flex; align-items:center; gap:16px; border-top:1px solid rgba(15,27,45,0.1);">
+        <div style="width:64px; height:64px; background:#0F1B2D; border-radius:14px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(15,27,45,0.15);">
+          <div style="border:1.5px solid #D9C77A; padding:6px 10px; display:flex; align-items:center; justify-content:center; transform:rotate(-3deg);">
+            <span style="font-family:'Arial Narrow',sans-serif; font-weight:600; color:#D9C77A; font-size:24px; line-height:1; letter-spacing:0.02em;">S</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#0F1B2D; opacity:0.6;">App Icon</div>
+          <div style="font-family:-apple-system,sans-serif; font-size:13px; color:#0F1B2D; margin-top:2px;">Stamped S in gold on ink.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · Stamp Seal</h3>
+      <p><strong>Wordmark:</strong> "SLABD" inside a rectangular stamp with "Cert. No." top + "Est. MMXXVI" bottom. Reads like a slab label.<br>
+      <strong>App icon:</strong> Gold stamped S, slightly off-axis (as if pressed). Authentication coding.<br>
+      <strong>Says:</strong> "This is officially graded." Heritage / certifying-body voice.<br>
+      <strong>Trade-off:</strong> Most "earned trust" feel, but also most institutional — might read older than the brand wants.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:32px;">
+  <p style="font-size:13px; color:#666; line-height:1.5;"><strong>System note:</strong> whichever you pick, the wordmark and app icon must read as siblings. A is the safest production-wise (no custom drawing). B is the most ownable visually (the slab bars become a brand element you can extend — section dividers, button shapes, etc.). C is the most "authenticated" but hardest to keep contemporary.</p>
+</div>
