@@ -23,10 +23,21 @@ ships in a follow-up client story.
   ownership-gated (the authenticated user must own the listing).
   It returns `{ uploadUrl, key, expiresAt }` where `uploadUrl` is an
   AWS-SigV4 presigned R2 PUT URL, TTL ≤ 5 minutes, with `Content-Type`
-  pinned to the declared MIME type and an upload-size cap of 10 MB
-  enforced via the `x-amz-content-length-range` condition. Returns `403`
-  when ownership check fails and `400` when the listing already has 8
-  images.
+  pinned to the declared MIME type. Returns `403` when ownership check
+  fails and `400` when the listing already has 8 images, when the
+  request body is malformed, or when the declared MIME type is not in
+  the allowlist (`image/jpeg`, `image/png`, `image/webp`, `image/heic`).
+  Returns `500 { error: "internal_error" }` when required R2 env vars
+  are absent (config guard).
+
+  **Size cap deferral note.** A 10 MB per-object cap is desirable but
+  is NOT enforced server-side at presign time: SigV4 query-string PUT
+  signing cannot bind `x-amz-content-length-range` (POST-policy only),
+  and a confirm-time HEAD-on-R2 round-trip is bypassable by retrying
+  confirm with a different key. The mobile picker story (out of scope
+  here) enforces the cap client-side. A future story may revisit
+  switching presign to a POST policy if server-side enforcement becomes
+  a hard requirement.
 
 - **AC-2 — Upload confirmation and image record creation.**
   `POST /api/listings/:id/images/confirm` is Clerk-gated and

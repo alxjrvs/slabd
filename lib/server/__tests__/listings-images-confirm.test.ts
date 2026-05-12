@@ -326,5 +326,82 @@ describe("listingsImagesConfirmHandler", () => {
       const body = (await res.json()) as { error: string };
       expect(body.error).toBe("invalid_body");
     });
+
+    it("returns 400 invalid_body when the body is not valid JSON", async () => {
+      const db = buildMockDb([]);
+      const app = buildApp({
+        db: db as unknown as ListingsImagesConfirmDeps["db"],
+        randomUUID: () => "unused",
+        ownsListing: async () => true,
+      });
+
+      const res = await app.request(
+        "/api/listings/listing-1/images/confirm",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{not json",
+        },
+      );
+
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toBe("invalid_body");
+    });
+  });
+
+  describe("500 — partial primary-swap failure observability", () => {
+    it("returns 500 and surfaces the partial-failure state when insert fails after demote", async () => {
+      const existingPrimary: ImageRow = {
+        id: "existing-primary",
+        listingId: "listing-1",
+        r2Key: "uploads/old-primary.jpg",
+        position: 0,
+        isPrimary: true,
+        createdAt: new Date("2026-01-01"),
+      };
+
+      // Custom DB: demote update succeeds, insert throws.
+      const callLog: string[] = [];
+      const db = {
+        select: () => ({
+          from: () => ({
+            where: (): Promise<ImageRow[]> => Promise.resolve([existingPrimary]),
+          }),
+        }),
+        update: (_table: unknown) => ({
+          set: (_values: unknown) => ({
+            where: (_cond: unknown): Promise<void> => {
+              callLog.push("update:demote");
+              return Promise.resolve();
+            },
+          }),
+        }),
+        insert: (_table: unknown) => ({
+          values: (_data: unknown): Promise<never> => {
+            callLog.push("insert");
+            return Promise.reject(new Error("insert failed"));
+          },
+        }),
+      };
+
+      const app = buildApp({
+        db: db as unknown as ListingsImagesConfirmDeps["db"],
+        randomUUID: () => "new-id",
+        ownsListing: async () => true,
+      });
+
+      const res = await app.request(
+        "/api/listings/listing-1/images/confirm",
+        makeRequest({ key: "uploads/new.jpg", isPrimary: true }),
+      );
+
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toBe("internal_error");
+      // Confirms the demote DID complete before the insert threw — this is
+      // the partial-failure state that produces a listing with zero primaries.
+      expect(callLog).toEqual(["update:demote", "insert"]);
+    });
   });
 });

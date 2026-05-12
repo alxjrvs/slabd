@@ -308,4 +308,29 @@ describe("listingsImagesUploadUrlHandler", () => {
       expect(body.error).toBe("internal_error");
     });
   });
+
+  describe("500 internal_error on missing R2 env (config guard)", () => {
+    it.each([
+      ["CF_ACCOUNT_ID"],
+      ["CF_R2_BUCKET"],
+      ["CF_R2_ACCESS_KEY_ID"],
+      ["CF_R2_SECRET_ACCESS_KEY"],
+    ] as const)("returns 500 when %s is empty", async (missingVar) => {
+      const presign = buildMockPresign();
+      const db = buildMockDb(0);
+      const env = { ...TEST_ENV, [missingVar]: "" };
+      const app = buildApp({
+        db: db as unknown as ListingsImagesUploadUrlDeps["db"],
+        presign,
+        env,
+      });
+
+      const res = await makeRequest(app);
+      expect(res.status).toBe(500);
+      const body = await res.json() as { error: string };
+      expect(body.error).toBe("internal_error");
+      // Guard must short-circuit BEFORE the presigner is touched.
+      expect(presign).not.toHaveBeenCalled();
+    });
+  });
 });

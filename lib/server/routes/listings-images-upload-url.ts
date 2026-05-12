@@ -113,6 +113,28 @@ export function listingsImagesUploadUrlHandler(
       CF_R2_SECRET_ACCESS_KEY: process.env.CF_R2_SECRET_ACCESS_KEY ?? "",
     };
 
+    // Config guard: missing R2 env coalesces to "" and produces a malformed
+    // presigned URL whose failure mode surfaces only at upload time as an
+    // opaque SigV4 rejection. Fail fast and visibly here instead.
+    if (
+      !env.CF_ACCOUNT_ID ||
+      !env.CF_R2_BUCKET ||
+      !env.CF_R2_ACCESS_KEY_ID ||
+      !env.CF_R2_SECRET_ACCESS_KEY
+    ) {
+      logger.error("listings-images-upload-url: missing R2 env", {
+        userId,
+        listingId,
+        missing: {
+          CF_ACCOUNT_ID: !env.CF_ACCOUNT_ID,
+          CF_R2_BUCKET: !env.CF_R2_BUCKET,
+          CF_R2_ACCESS_KEY_ID: !env.CF_R2_ACCESS_KEY_ID,
+          CF_R2_SECRET_ACCESS_KEY: !env.CF_R2_SECRET_ACCESS_KEY,
+        },
+      });
+      return c.json({ error: "internal_error" }, 500);
+    }
+
     // ------------------------------------------------------------------
     // 2. Parse and validate request body.
     // ------------------------------------------------------------------
@@ -120,8 +142,12 @@ export function listingsImagesUploadUrlHandler(
     try {
       const body = await c.req.json<{ contentType?: unknown }>();
       contentType = typeof body?.contentType === "string" ? body.contentType : undefined;
-    } catch {
-      // JSON parse failure — treat as missing contentType
+    } catch (err) {
+      logger.warn("listings-images-upload-url: body parse failed", {
+        userId,
+        listingId,
+        err: serializeError(err),
+      });
     }
 
     if (!contentType || !ALLOWED_CONTENT_TYPES.has(contentType)) {

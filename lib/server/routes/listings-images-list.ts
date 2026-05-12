@@ -65,6 +65,13 @@ export function listingsImagesListHandler(
       CF_IMAGES_ACCOUNT_HASH: process.env.CF_IMAGES_ACCOUNT_HASH ?? "",
     };
 
+    if (!env.CF_IMAGES_ACCOUNT_HASH) {
+      logger.error("listings-images-list: missing CF_IMAGES_ACCOUNT_HASH", {
+        listingId,
+      });
+      return c.json({ error: "internal_error" }, 500);
+    }
+
     const db = (deps.db ?? defaultDb) as SelectableDb;
 
     let rows: ImageRow[];

@@ -261,5 +261,18 @@ describe("listingsImagesListHandler", () => {
       const body = (await res.json()) as { error: string };
       expect(body.error).toBe("internal_error");
     });
+
+    it("returns 500 when CF_IMAGES_ACCOUNT_HASH is empty (config guard)", async () => {
+      const db = buildMockDb([]);
+      const app = buildApp({
+        db: db as unknown as ListingsImagesListDeps["db"],
+        env: { CF_IMAGES_ACCOUNT_HASH: "" },
+      });
+
+      const res = await app.request("/api/listings/listing-abc/images");
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toBe("internal_error");
+    });
   });
 });

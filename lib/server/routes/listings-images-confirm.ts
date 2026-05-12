@@ -85,6 +85,11 @@ export function listingsImagesConfirmHandler(deps: ListingsImagesConfirmDeps = {
     const userId = c.var.userId;
     const listingId = c.req.param("id") ?? "";
 
+    if (!listingId) {
+      logger.warn("listings-images-confirm: empty listingId", { userId });
+      return c.json({ error: "invalid_listing_id" }, 400);
+    }
+
     const db = (deps.db ?? defaultDb) as ListingsImagesDb;
     const randomUUID = deps.randomUUID ?? (() => crypto.randomUUID());
     const checkOwnership = deps.ownsListing ?? ownsListing;
@@ -95,7 +100,12 @@ export function listingsImagesConfirmHandler(deps: ListingsImagesConfirmDeps = {
     let body: { key?: unknown; isPrimary?: unknown; position?: unknown };
     try {
       body = await c.req.json();
-    } catch {
+    } catch (err) {
+      logger.warn("listings-images-confirm: body parse failed", {
+        userId,
+        listingId,
+        err: serializeError(err),
+      });
       return c.json({ error: "invalid_body" }, 400);
     }
 
@@ -173,11 +183,18 @@ export function listingsImagesConfirmHandler(deps: ListingsImagesConfirmDeps = {
 
     // ------------------------------------------------------------------
     // 6. Atomic primary swap when isPrimary is requested (non-first image).
+    //
+    // Drizzle does not expose transactions on the Neon HTTP driver; sequential
+    // awaited statements are used per S-1.2 precedent. If the demote update
+    // succeeds but the subsequent insert fails, the listing is left with zero
+    // primary images — split the try blocks so the error log can identify
+    // which statement failed and whether remediation is required.
     // ------------------------------------------------------------------
-    try {
-      if (finalIsPrimary && !isFirstImage) {
-        // Drizzle does not expose transactions on the Neon HTTP driver;
-        // sequential awaited statements are used per S-1.2 precedent.
+    const willSwap = finalIsPrimary && !isFirstImage;
+    let demoteCompleted = false;
+
+    if (willSwap) {
+      try {
         // and() returns SQL | undefined; both conditions are always defined here.
         const demoteCond = and(
           eq(listingImages.listingId, listingId),
@@ -187,8 +204,18 @@ export function listingsImagesConfirmHandler(deps: ListingsImagesConfirmDeps = {
           .update(listingImages)
           .set({ isPrimary: false })
           .where(demoteCond);
+        demoteCompleted = true;
+      } catch (err) {
+        logger.error("listings-images-confirm: primary demote failed (no rows mutated)", {
+          listingId,
+          userId,
+          err: serializeError(err),
+        });
+        return c.json({ error: "internal_error" }, 500);
       }
+    }
 
+    try {
       await db.insert(listingImages).values({
         id,
         listingId,
@@ -198,10 +225,24 @@ export function listingsImagesConfirmHandler(deps: ListingsImagesConfirmDeps = {
         createdAt: now,
       });
     } catch (err) {
-      logger.error("listings-images-confirm: failed to insert image", {
-        listingId,
-        err: serializeError(err),
-      });
+      if (demoteCompleted) {
+        logger.error(
+          "listings-images-confirm: insert failed AFTER primary demote — listing may have zero primary images, manual remediation may be required",
+          {
+            listingId,
+            userId,
+            key,
+            err: serializeError(err),
+          },
+        );
+      } else {
+        logger.error("listings-images-confirm: insert failed", {
+          listingId,
+          userId,
+          key,
+          err: serializeError(err),
+        });
+      }
       return c.json({ error: "internal_error" }, 500);
     }
 
