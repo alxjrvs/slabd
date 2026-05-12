@@ -13,6 +13,7 @@ import type { Context } from "hono";
 import { eq } from "drizzle-orm";
 import { db as defaultDb } from "~/lib/db";
 import { sellerAccounts } from "~/lib/db/schema";
+import { logger, serializeError } from "~/lib/logger";
 import type { AppVars } from "../types";
 
 // ---------------------------------------------------------------------------
@@ -25,7 +26,7 @@ type SelectableDb = {
     from: (table: typeof sellerAccounts) => {
       where: (
         condition: ReturnType<typeof eq>,
-      ) => { onboardingStatus: string; payoutsEnabled: boolean }[];
+      ) => Promise<{ onboardingStatus: string; payoutsEnabled: boolean }[]>;
     };
   };
 };
@@ -47,6 +48,8 @@ export interface OnboardingStatusDeps {
  * and responds with `{ onboardingStatus, payoutsEnabled }`.
  *
  * When no row exists, synthesizes `{ onboardingStatus: "not_started", payoutsEnabled: false }`.
+ * Returns `500 { error: "internal_error" }` on DB failure — "can't read DB" is
+ * distinct from "no row found".
  */
 export function onboardingStatusHandler(deps: OnboardingStatusDeps = {}) {
   const db = (deps.db ?? defaultDb) as SelectableDb;
@@ -54,12 +57,20 @@ export function onboardingStatusHandler(deps: OnboardingStatusDeps = {}) {
   return async (c: Context<{ Variables: AppVars }>) => {
     const userId = c.var.userId;
 
-    const rows = db
-      .select()
-      .from(sellerAccounts)
-      .where(eq(sellerAccounts.userId, userId));
-
-    const row = rows[0] ?? null;
+    let row: { onboardingStatus: string; payoutsEnabled: boolean } | null;
+    try {
+      const rows = await db
+        .select()
+        .from(sellerAccounts)
+        .where(eq(sellerAccounts.userId, userId));
+      row = rows[0] ?? null;
+    } catch (err) {
+      logger.error("[onboarding-status] DB query failed", {
+        userId,
+        ...serializeError(err),
+      });
+      return c.json({ error: "internal_error" }, 500);
+    }
 
     if (!row) {
       return c.json({ onboardingStatus: "not_started", payoutsEnabled: false });

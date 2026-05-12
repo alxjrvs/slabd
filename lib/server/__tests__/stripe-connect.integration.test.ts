@@ -165,8 +165,11 @@ function buildInMemoryDb(initial: SellerRow[] = []) {
               : [...store.values()];
           }
 
-          // Plain array: satisfies both rows[0] (sync) and await (async).
-          return rows;
+          // Return a Promise so that both require-seller-onboarded and
+          // onboarding-status (which now await the result) work correctly.
+          // stripe-webhook uses Array.isArray on the awaited result, which
+          // still holds after Promise.resolve([...]).
+          return Promise.resolve(rows);
         }),
       })),
     })),

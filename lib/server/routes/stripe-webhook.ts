@@ -101,11 +101,23 @@ export function stripeWebhookHandler(deps: StripeWebhookDeps = {}) {
     }
 
     // 4. Record event for idempotency.
-    const { inserted } = await recordEvent(
-      db as Parameters<typeof recordEvent>[0],
-      event.id,
-    );
-    if (!inserted) {
+    //    If this insert throws, the idempotency row was NOT committed — Stripe
+    //    can safely retry and will attempt the insert again.
+    let idempotencyResult: { inserted: boolean };
+    try {
+      idempotencyResult = await recordEvent(
+        db as Parameters<typeof recordEvent>[0],
+        event.id,
+      );
+    } catch (err) {
+      logger.error("[stripe-webhook] recordEvent (idempotency insert) failed", {
+        eventId: event.id,
+        ...serializeError(err),
+      });
+      return c.json({ error: "internal_error" }, 500);
+    }
+
+    if (!idempotencyResult.inserted) {
       return c.json({ ok: true, duplicate: true });
     }
 
@@ -114,12 +126,21 @@ export function stripeWebhookHandler(deps: StripeWebhookDeps = {}) {
       const account = event.data.object as Stripe.Account;
 
       // Look up the seller_accounts row by stripe_account_id.
-      const rows = await db
-        .select()
-        .from(sellerAccounts)
-        .where(eq(sellerAccounts.stripeAccountId, account.id));
-
-      const row = Array.isArray(rows) ? rows[0] : undefined;
+      let row: { userId: string; stripeAccountId: string | null } | undefined;
+      try {
+        const rows = await db
+          .select()
+          .from(sellerAccounts)
+          .where(eq(sellerAccounts.stripeAccountId, account.id));
+        row = Array.isArray(rows) ? rows[0] : undefined;
+      } catch (err) {
+        logger.error("[stripe-webhook] DB select for stripeAccountId failed", {
+          eventId: event.id,
+          stripeAccountId: account.id,
+          ...serializeError(err),
+        });
+        return c.json({ error: "internal_error" }, 500);
+      }
 
       if (!row) {
         logger.warn("[stripe-webhook] account.updated for unknown stripe_account_id", {
@@ -131,10 +152,28 @@ export function stripeWebhookHandler(deps: StripeWebhookDeps = {}) {
       const onboardingStatus = mapStripeAccountToStatus(account);
       const payoutsEnabled = account.payouts_enabled ?? false;
 
-      await db
-        .update(sellerAccounts)
-        .set({ onboardingStatus, payoutsEnabled, updatedAt: new Date() })
-        .where(eq(sellerAccounts.stripeAccountId, account.id));
+      // Update seller_accounts row.
+      // If this throws, the idempotency record IS committed. Stripe will retry
+      // the webhook and receive duplicate:true without retrying this update.
+      // Log at error severity so reconciliation can be performed manually.
+      try {
+        await db
+          .update(sellerAccounts)
+          .set({ onboardingStatus, payoutsEnabled, updatedAt: new Date() })
+          .where(eq(sellerAccounts.stripeAccountId, account.id));
+      } catch (err) {
+        logger.error(
+          "[stripe-webhook] DB update failed — idempotency record committed, manual reconciliation required",
+          {
+            eventId: event.id,
+            stripeAccountId: account.id,
+            targetOnboardingStatus: onboardingStatus,
+            targetPayoutsEnabled: payoutsEnabled,
+            ...serializeError(err),
+          },
+        );
+        return c.json({ error: "internal_error" }, 500);
+      }
 
       return c.json({ ok: true });
     }

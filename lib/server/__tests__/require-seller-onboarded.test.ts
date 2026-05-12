@@ -6,6 +6,7 @@
  * - 403 on 'pending' status
  * - 403 on 'restricted' status
  * - next() called on 'complete' status
+ * - 500 on DB query failure (fail-closed, not onboarding_required)
  */
 
 import { Hono } from "hono";
@@ -22,7 +23,17 @@ function buildMockDb(row: MockSellerRow) {
   return {
     select: () => ({
       from: () => ({
-        where: (): MockSellerRow[] => (row ? [row] : []),
+        where: (): Promise<MockSellerRow[]> => Promise.resolve(row ? [row] : []),
+      }),
+    }),
+  };
+}
+
+function buildThrowingMockDb() {
+  return {
+    select: () => ({
+      from: () => ({
+        where: (): Promise<MockSellerRow[]> => Promise.reject(new Error("DB connection refused")),
       }),
     }),
   };
@@ -37,6 +48,25 @@ function buildApp(row: MockSellerRow) {
   const app = new Hono<{ Variables: AppVars }>();
 
   // Inject userId as if clerkAuth() ran
+  app.use("*", async (c, next) => {
+    c.set("userId", "user_test_123");
+    c.set("email", "test@example.com");
+    await next();
+  });
+
+  app.post(
+    "/api/listings",
+    requireSellerOnboarded({ db }),
+    (c) => c.body(null, 204),
+  );
+
+  return app;
+}
+
+function buildThrowingApp() {
+  const db = buildThrowingMockDb() as NonNullable<Parameters<typeof requireSellerOnboarded>[0]>["db"];
+  const app = new Hono<{ Variables: AppVars }>();
+
   app.use("*", async (c, next) => {
     c.set("userId", "user_test_123");
     c.set("email", "test@example.com");
@@ -99,5 +129,13 @@ describe("requireSellerOnboarded middleware", () => {
     // We don't invoke it (would need live DB), just verify it's callable.
     const mw = requireSellerOnboarded();
     expect(typeof mw).toBe("function");
+  });
+
+  it("returns 500 with internal_error when DB query throws (fail-closed, not onboarding_required)", async () => {
+    const app = buildThrowingApp();
+    const res = await app.request("/api/listings", { method: "POST" });
+    expect(res.status).toBe(500);
+    const body = await res.json() as { error: string };
+    expect(body).toEqual({ error: "internal_error" });
   });
 });

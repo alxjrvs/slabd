@@ -24,7 +24,7 @@ function buildMockDb(row: MockSellerRow) {
   return {
     select: () => ({
       from: () => ({
-        where: (): MockSellerRow[] => (row ? [row] : []),
+        where: (): Promise<MockSellerRow[]> => Promise.resolve(row ? [row] : []),
       }),
     }),
   };

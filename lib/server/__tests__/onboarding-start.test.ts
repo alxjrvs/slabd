@@ -224,6 +224,54 @@ describe("onboardingStartHandler", () => {
     });
   });
 
+  describe("DB insert throws after stripe.accounts.create succeeds (orphan account scenario)", () => {
+    it("returns 500 with internal_error and stripe.accounts.create was already invoked", async () => {
+      // accounts.create succeeds — a Stripe account now exists.
+      // db.insert then throws — the orphan account is the failure mode this test pins.
+      const accountCreate = jest
+        .fn()
+        .mockResolvedValue({ id: "acct_orphan_test" });
+      const accountLinksCreate = jest.fn(); // should never be reached
+
+      const stripe = buildMockStripe({ accountCreate, accountLinksCreate });
+
+      const throwingDb = {
+        select: () => ({
+          from: () => ({
+            where: (): [] => [],
+          }),
+        }),
+        insert: (_table: unknown) => ({
+          values: (_data: unknown) => ({
+            onConflictDoUpdate: (_opts: unknown): never => {
+              throw new Error("DB insert failed");
+            },
+          }),
+        }),
+      };
+
+      const app = buildApp({
+        db: throwingDb as unknown as OnboardingStartDeps["db"],
+        stripe,
+        env: {
+          STRIPE_SECRET_KEY: "sk_test_fake",
+          EXPO_PUBLIC_APP_URL: "https://app.example.com",
+        },
+      });
+
+      const res = await app.request("/api/onboarding/start", { method: "POST" });
+      expect(res.status).toBe(500);
+
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toBe("internal_error");
+
+      // Stripe account was created before the failure — proving the orphan exists
+      expect(accountCreate).toHaveBeenCalledTimes(1);
+      // accountLinks.create must NOT have been called
+      expect(accountLinksCreate).not.toHaveBeenCalled();
+    });
+  });
+
   describe("Stripe SDK error propagates", () => {
     it("returns 500 when stripe.accountLinks.create throws", async () => {
       const existingRow: SellerRow = {
