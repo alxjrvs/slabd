@@ -12,3 +12,7 @@
 {"ts":"2026-05-12T00:00:00Z","event":"phase_4_remediation_commit","sha":"81f2071","scope":"config_guards + json_parse_logging + partial_swap_observability + AC-1 amendment + tests"}
 {"ts":"2026-05-12T00:00:00Z","event":"phase_4_review_pass_2","verdicts":{"silent-failure-hunter":"CLEAN","code-reviewer":"APPROVED"},"re_review_count":1}
 {"ts":"2026-05-12T00:00:00Z","event":"phase_4_review_complete","verdict":"APPROVED","final_sha":"81f2071"}
+{"ts":"2026-05-12T00:00:00Z","event":"phase_5_ship_pushed","branch":"run/2026-05-12-s-1-3-image-upload"}
+{"ts":"2026-05-12T00:00:00Z","event":"phase_5_pr_opened","pr":49,"url":"https://github.com/alxjrvs/slabd/pull/49","base":"main","head_sha":"e1240af"}
+{"ts":"2026-05-12T00:00:00Z","event":"phase_5_issue_comment_synced","issue":4,"comment_url":"https://github.com/alxjrvs/slabd/issues/4#issuecomment-4427489923"}
+{"ts":"2026-05-12T00:00:00Z","event":"shipped","run_id":"2026-05-12-s-1-3-image-upload","pr":49,"verdict":"APPROVED","cycles":5,"remediation_cycles":1,"final_test_gate":{"suites":36,"tests":226}}

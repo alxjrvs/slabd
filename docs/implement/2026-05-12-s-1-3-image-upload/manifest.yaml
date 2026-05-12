@@ -1,6 +1,8 @@
 run_id: 2026-05-12-s-1-3-image-upload
-status: in_flight
-phase: phase_4_review_complete
+status: shipped
+phase: phase_5_ship_complete
+pr_number: 49
+pr_url: https://github.com/alxjrvs/slabd/pull/49
 planned_cycles: 5
 dep_graph:
   cycle-1: []
