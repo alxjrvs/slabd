@@ -74,6 +74,11 @@ export default function VerifyPhoneScreen() {
         flow: "auth.phone.resend",
         error: serializeError(err),
       });
+      // Restart the cooldown on failure too — otherwise a transient
+      // rate-limit / network blip would let the user spam Clerk and burn
+      // through its server-side rate limit.
+      cooldownStartedAt.current = Date.now();
+      setNow(Date.now());
       setError("Couldn't resend the code. Try again in a moment.");
     } finally {
       setResendingAt(null);

@@ -104,10 +104,15 @@ export default function AccountScreen() {
         error: serializeError(err),
       });
       setError("Couldn't sign out. Please try again.");
+    } finally {
+      // Always clear the guard. The early-return + disabled prop prevent
+      // double-tap during the in-flight await; once signOut() resolves the
+      // session is already gone, so a late tap is a no-op against an
+      // already-signed-out Clerk. Leaving the flag set on success would
+      // wedge the button if Clerk's auth flip is delayed or the screen
+      // re-mounts (e.g. deep-link).
       setSigningOut(false);
     }
-    // On success the auth state flips and this screen unmounts; deliberately
-    // leave `signingOut` set so a late tap can't queue a second teardown.
   };
 
   return (

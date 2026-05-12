@@ -32,7 +32,7 @@ export default function SignUpPhoneScreen() {
       router.push({ pathname: "/(auth)/verify-phone", params: { phone: trimmed } });
     } catch (err) {
       logger.error("sign-up phone: prepare failed", {
-        flow: "auth.phone.sign_in",
+        flow: "auth.phone.sign_up",
         error: serializeError(err),
       });
       setError("Couldn't send code. Try again.");

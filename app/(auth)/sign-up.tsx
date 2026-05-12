@@ -32,7 +32,7 @@ export default function SignUpScreen() {
       router.push({ pathname: "/(auth)/verify-email", params: { email: trimmed } });
     } catch (err) {
       logger.error("sign-up email: prepare failed", {
-        flow: "auth.email.sign_in",
+        flow: "auth.email.sign_up",
         error: serializeError(err),
       });
       setError("Couldn't send code. Try again.");

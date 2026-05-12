@@ -106,4 +106,37 @@ describe("VerifyPhoneScreen — 90-second resend gate (#34 AC-4)", () => {
       expect(mockPreparePhone).toHaveBeenCalledWith({ strategy: "phone_code" });
     });
   });
+
+  // Remediation (#34 follow-up): a failed resend must (a) surface a generic
+  // error and (b) restart the 90s cooldown. Otherwise a transient blip lets
+  // the user hammer Clerk's already-rate-limited prepare endpoint.
+  it("on resend failure: surfaces an error AND restarts the cooldown", async () => {
+    mockPreparePhone.mockReset();
+    mockPreparePhone.mockRejectedValueOnce(new Error("clerk rate limited"));
+
+    render(<VerifyPhoneScreen />);
+    // Advance to t=90s so the gate opens.
+    act(() => {
+      jest.advanceTimersByTime(90_000);
+    });
+    const enabled = screen.getByRole("button", { name: "Resend code" });
+    expect(enabled.props.accessibilityState).toMatchObject({ disabled: false });
+
+    await act(async () => {
+      fireEvent.press(enabled);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Couldn't resend the code/i)).toBeOnTheScreen();
+    });
+
+    // Cooldown must have restarted — the button is back to "Resend in 90s"
+    // and disabled. A naive impl that only restarts on success would leave
+    // the button enabled here.
+    const afterFail = screen.getByRole("button", { name: /Resend in 90s/ });
+    expect(afterFail.props.accessibilityState).toMatchObject({ disabled: true });
+    fireEvent.press(afterFail);
+    // Still only the one (failed) prepare call — the gate is preventing spam.
+    expect(mockPreparePhone).toHaveBeenCalledTimes(1);
+  });
 });
