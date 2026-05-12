@@ -22,7 +22,7 @@ integration cycle to keep the disjoint constraint clean.
 - `wrangler.toml`
 - `.github/workflows/ci.yml`
 - `drizzle/0001_stripe_webhook_events.sql`
-- `lib/server/db/schema.ts`
+- `lib/db/schema.ts`
 - `lib/server/stripe/client.ts`
 - `lib/server/stripe/idempotency.ts`
 - `lib/server/stripe/onboarding-status.ts`
@@ -55,7 +55,7 @@ factory returning a Hono middleware that reads
 
 **reads_from:**
 - `lib/server/stripe/client.ts`
-- `lib/server/db/schema.ts`
+- `lib/db/schema.ts`
 - `lib/server/middleware/clerk-auth.ts`
 
 **mode:** default
@@ -79,7 +79,7 @@ the create-vs-reuse branch.
 **reads_from:**
 - `lib/server/stripe/client.ts`
 - `lib/server/stripe/idempotency.ts`
-- `lib/server/db/schema.ts`
+- `lib/db/schema.ts`
 
 **mode:** default
 
@@ -104,7 +104,7 @@ valid + idempotent + bad-sig + unknown-event.
 - `lib/server/__tests__/listings-gate.test.ts`
 
 **reads_from:**
-- `lib/server/db/schema.ts`
+- `lib/db/schema.ts`
 - `lib/server/middleware/clerk-auth.ts`
 - `lib/server/middleware/require-seller-onboarded.ts`
 

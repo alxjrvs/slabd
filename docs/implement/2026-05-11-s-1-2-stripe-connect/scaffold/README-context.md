@@ -21,8 +21,8 @@ lib/server/routes/
 ├── stripe-webhook.ts      # POST /api/webhooks/stripe (AC-2)
 └── listings-stub.ts       # POST /api/listings stub (AC-4)
 
-lib/server/db/
-└── schema.ts              # adds stripe_webhook_events table
+lib/db/
+└── schema.ts              # adds stripe_webhook_events table (existing module)
 
 drizzle/
 └── 0001_stripe_webhook_events.sql
