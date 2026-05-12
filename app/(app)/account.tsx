@@ -77,6 +77,11 @@ export default function AccountScreen() {
         flow: "account.update",
         error: serializeError(err),
       });
+      // Optimistic rollback: when the server rejects, snap the form back
+      // to the last-known-persisted Clerk values so the UI never lies.
+      setFirstName(initialFirstName);
+      setLastName(initialLastName);
+      setPrefs(initialPrefs);
       setError("Couldn't save changes. Please try again.");
     } finally {
       setSubmitting(false);

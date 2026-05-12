@@ -159,4 +159,32 @@ describe("AccountScreen (AC-5 profile editing)", () => {
     expect(screen.queryByText(/form_first_name_max_length_exceeded/)).toBeNull();
     expect(screen.queryByText(/saved/i)).toBeNull();
   });
+
+  // AC-5 (#35): optimistic rollback — when user.update rejects, the local form
+  // state must snap back to the pre-submit snapshot so the displayed values
+  // never drift away from the persisted Clerk state. Load-bearing: deleting
+  // the rollback would leave the field showing "Bobby" while the server still
+  // says "Buyer", and this test would catch that.
+  it("AC-5 (#35): rolls form state back to the pre-submit snapshot when user.update rejects", async () => {
+    mockUpdate.mockRejectedValueOnce(new Error("network down"));
+    render(<AccountScreen />);
+    const firstNameField = screen.getByLabelText("First name");
+    const lastNameField = screen.getByLabelText("Last name");
+    expect(firstNameField.props.value).toBe("Buyer");
+    expect(lastNameField.props.value).toBe("One");
+
+    fireEvent.changeText(firstNameField, "Bobby");
+    fireEvent.changeText(lastNameField, "Tables");
+    fireEvent.press(screen.getByRole("switch", { name: "Direct messages" }));
+    fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Couldn't save changes. Please try again.")).toBeOnTheScreen();
+    });
+
+    // Form state must be back to the pre-submit values, not the user's edits.
+    expect(screen.getByLabelText("First name").props.value).toBe("Buyer");
+    expect(screen.getByLabelText("Last name").props.value).toBe("One");
+    expect(screen.getByRole("switch", { name: "Direct messages" }).props.accessibilityState).toMatchObject({ checked: false });
+  });
 });
