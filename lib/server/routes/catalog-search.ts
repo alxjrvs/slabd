@@ -18,6 +18,7 @@ import {
   computeQueryKey,
   readCache,
   writeCache,
+  type CacheDb,
 } from "~/lib/server/catalog/cache";
 import type { CatalogAdapter } from "~/lib/server/catalog/adapter";
 import type { CatalogMatch } from "~/lib/server/catalog/types";
@@ -36,11 +37,8 @@ const TIMEOUT_SENTINEL = "__timeout" as const;
 // Types
 // ---------------------------------------------------------------------------
 
-// Opaque db type — matches what cycle-2 expects via cache.ts's AnyDb.
-type AnyDb = unknown;
-
 export type CatalogSearchDeps = {
-  db: AnyDb;
+  db: CacheDb;
   adapter: CatalogAdapter;
   env: { CATALOG_CACHE_TTL_DAYS: number };
   logger?: typeof logger;

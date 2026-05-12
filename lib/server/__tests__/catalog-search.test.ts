@@ -57,7 +57,7 @@ const MATCH_2: CatalogMatch = {
 
 function buildApp(deps: Partial<CatalogSearchDeps> & { adapter: CatalogSearchDeps["adapter"] }) {
   const fullDeps: CatalogSearchDeps = {
-    db: {},
+    db: {} as CatalogSearchDeps["db"],
     env: { CATALOG_CACHE_TTL_DAYS: 30 },
     logger: {
       debug: jest.fn(),
