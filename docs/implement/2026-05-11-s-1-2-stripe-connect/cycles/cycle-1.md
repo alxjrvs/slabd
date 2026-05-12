@@ -55,4 +55,4 @@ acs_covered: [AC-4, AC-5]
 
 ## Commit SHA
 
-(populated after commit)
+`f5e740f` feat(stripe): foundation for Connect onboarding (cycle-1)
