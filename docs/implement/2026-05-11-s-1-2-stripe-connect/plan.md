@@ -25,9 +25,11 @@ integration cycle to keep the disjoint constraint clean.
 - `lib/server/db/schema.ts`
 - `lib/server/stripe/client.ts`
 - `lib/server/stripe/idempotency.ts`
+- `lib/server/stripe/onboarding-status.ts`
 - `lib/server/middleware/require-seller-onboarded.ts`
 - `lib/server/__tests__/stripe-client.test.ts`
 - `lib/server/__tests__/idempotency.test.ts`
+- `lib/server/__tests__/onboarding-status-mapping.test.ts`
 - `lib/server/__tests__/require-seller-onboarded.test.ts`
 
 **reads_from:** []
