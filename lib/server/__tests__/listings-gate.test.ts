@@ -2,7 +2,7 @@
  * Tests for AC-4 — Listing-publish gate behavior.
  *
  * Exercises the REAL `requireSellerOnboarded()` middleware composed with
- * the REAL `listingsStubHandler`. This proves the gate flips correctly
+ * the REAL `listingsDraftCreateHandler`. This proves the gate flips correctly
  * when DB state changes for the same fixture user, establishing the
  * integration pattern that cycle-5 inherits.
  *
@@ -11,7 +11,7 @@
 
 import { Hono } from "hono";
 import { requireSellerOnboarded } from "../middleware/require-seller-onboarded";
-import { listingsStubHandler } from "../routes/listings-stub";
+import { listingsDraftCreateHandler } from "../routes/listings-draft-create";
 import type { AppVars } from "../types";
 
 // ---------------------------------------------------------------------------
@@ -20,7 +20,7 @@ import type { AppVars } from "../types";
 
 type MockSellerRow = { onboardingStatus: string } | null;
 
-function buildMockDb(row: MockSellerRow) {
+function buildMockSellerDb(row: MockSellerRow) {
   return {
     select: () => ({
       from: () => ({
@@ -30,12 +30,21 @@ function buildMockDb(row: MockSellerRow) {
   };
 }
 
+/** Minimal listings DB that records inserts without side effects. */
+function buildMockListingsDb() {
+  return {
+    insert: () => ({
+      values: () => Promise.resolve(undefined),
+    }),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Test app factory
 // ---------------------------------------------------------------------------
 
 function buildApp(row: MockSellerRow) {
-  const mockDb = buildMockDb(row) as NonNullable<
+  const mockSellerDb = buildMockSellerDb(row) as NonNullable<
     Parameters<typeof requireSellerOnboarded>[0]
   >["db"];
 
@@ -49,9 +58,9 @@ function buildApp(row: MockSellerRow) {
   });
 
   app.post(
-    "/api/listings",
-    requireSellerOnboarded({ db: mockDb }),
-    listingsStubHandler,
+    "/api/listings/draft",
+    requireSellerOnboarded({ db: mockSellerDb }),
+    listingsDraftCreateHandler({ db: buildMockListingsDb() as any }),
   );
 
   return app;
@@ -64,24 +73,35 @@ function buildApp(row: MockSellerRow) {
 describe("listings publish gate (AC-4)", () => {
   it("returns 403 with onboarding_required when onboarding_status is pending", async () => {
     const app = buildApp({ onboardingStatus: "pending" });
-    const res = await app.request("/api/listings", { method: "POST" });
+    const res = await app.request("/api/listings/draft", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
     expect(res.status).toBe(403);
     const body = await res.json();
     expect(body).toEqual({ error: "onboarding_required" });
   });
 
-  it("returns 204 and reaches listingsStubHandler when onboarding_status is complete", async () => {
+  it("returns 201 and reaches listingsDraftCreateHandler when onboarding_status is complete", async () => {
     const app = buildApp({ onboardingStatus: "complete" });
-    const res = await app.request("/api/listings", { method: "POST" });
-    expect(res.status).toBe(204);
-    // 204 No Content — body must be empty
-    const text = await res.text();
-    expect(text).toBe("");
+    const res = await app.request("/api/listings/draft", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { id: string };
+    expect(typeof body.id).toBe("string");
   });
 
   it("returns 403 when no seller_accounts row exists (treats not_started as ungated)", async () => {
     const app = buildApp(null);
-    const res = await app.request("/api/listings", { method: "POST" });
+    const res = await app.request("/api/listings/draft", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
     expect(res.status).toBe(403);
     const body = await res.json();
     expect(body).toEqual({ error: "onboarding_required" });

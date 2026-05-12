@@ -1,0 +1,72 @@
+{
+  "skill": "implement:build",
+  "id": "cycle-2",
+  "status": "complete",
+  "checkpoints_reached": ["plan_written", "red_seen", "green_seen", "refactor_done", "local_review:passed"],
+  "artifacts_written": [
+    "lib/server/routes/listings-draft-create.ts",
+    "lib/server/routes/listings-draft-update.ts",
+    "lib/server/routes/listings-draft-get.ts",
+    "lib/server/__tests__/listings-draft-create.test.ts",
+    "lib/server/__tests__/listings-draft-update.test.ts",
+    "lib/server/__tests__/listings-draft-get.test.ts"
+  ],
+  "verifiable_evidence": {
+    "branch_sha_claimed": "0162338adf1d00138377f8a5d2fb67f90615ff20",
+    "tests_passing": true,
+    "files_changed_claimed": [
+      "lib/server/routes/listings-draft-create.ts",
+      "lib/server/routes/listings-draft-update.ts",
+      "lib/server/routes/listings-draft-get.ts",
+      "lib/server/__tests__/listings-draft-create.test.ts",
+      "lib/server/__tests__/listings-draft-update.test.ts",
+      "lib/server/__tests__/listings-draft-get.test.ts"
+    ],
+    "test_command_used": "bun test lib/server/__tests__/listings-draft-create.test.ts lib/server/__tests__/listings-draft-update.test.ts lib/server/__tests__/listings-draft-get.test.ts",
+    "test_result": "22 pass, 0 fail",
+    "typecheck": "clean",
+    "lint": "clean"
+  },
+  "acs_covered": ["AC-1", "AC-4"],
+  "ac_test_evidence": [
+    {
+      "ac_id": "AC-1",
+      "test_name": "AC-1: signed-in onboarded seller can POST /api/listings/draft and receives 201 with id"
+    },
+    {
+      "ac_id": "AC-1",
+      "test_name": "AC-1: works with an empty body (no fields required at create time)"
+    },
+    {
+      "ac_id": "AC-1",
+      "test_name": "AC-1: draft is created with status=draft and sellerUserId from context"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: PATCH merges partial attribute fields onto existing draft"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: PATCH with only catalogMatchId sets that field without touching others"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: PATCH returns 403 forbidden when requesting user is not the listing owner"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: GET returns draft state with images joined and catalog_match_id"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: GET returns empty images array when no images exist for the draft"
+    },
+    {
+      "ac_id": "AC-4",
+      "test_name": "AC-4: GET returns 403 forbidden when requesting user is not the listing owner"
+    }
+  ],
+  "proposed_ontology_terms": [],
+  "tokens_used": { "input": 0, "output": 0 },
+  "error": null
+}

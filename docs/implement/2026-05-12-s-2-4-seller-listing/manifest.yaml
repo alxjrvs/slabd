@@ -1,0 +1,46 @@
+run_id: 2026-05-12-s-2-4-seller-listing
+status: in_flight
+phase: define_complete
+input_shape: issue
+seed: "#7"
+batch_context:
+  parent: milestone-2-marketplace-core
+  cohort:
+    - 7   # S-2.4 seller drafts/publishes listing       (2B) - this run
+    - 8   # S-2.5 buyer browses open marketplace        (2B)
+    - 9   # S-2.1 buyer swipes filter-narrowed deck     (2A)
+    - 10  # S-2.2 filters narrow the swipe deck         (2A)
+    - 11  # S-2.3 like / pass / save                    (2A)
+    - 14  # S-2.8 buyer purchases a listing             (2D)
+    - 15  # S-2.9 escrow + payout                       (2D)
+    - 16  # S-2.10 shipping label + tracking            (2D)
+    - 17  # S-2.11 buyer rates the seller               (2D)
+    - 12  # S-2.6 editor builds curated deck            (2C)
+    - 13  # S-2.7 buyer consumes curated deck           (2C)
+    - 18  # S-2.12 lifecycle notifications              (2E)
+  build_order_rationale: |
+    2B (listings) first — substrate for swipe (2A) and commerce (2D).
+    2A in parallel-eligible block once 2B foundation lands.
+    2D after 2B (listings substrate) + relies on already-shipped 1C Stripe POC (S-1.2).
+    2C late-M2 (needs 2B + admin foundations).
+    2E last (driven by commerce domain events).
+mode: concurrent
+triviality: standard
+path: standard
+issues:
+  - 7
+pr_strategy: one   # no auto-merge workflow detected; matches M1 pattern (single PR per run)
+base_branch: main
+base_sha: e401838
+gh_available: true
+test_commands: ["bun test", "bun run typecheck", "bun run lint"]
+aggregate_budget: 12
+commit_policy: per-cycle
+unit: U-Listings-Catalog
+deps_satisfied:
+  - "S-1.1 buyer signup/profile (#1, shipped)"
+  - "S-1.2 Stripe Connect (#3, shipped)"
+  - "S-1.3 image upload pipeline (#4, shipped)"
+  - "S-1.4 GCD catalog lookup (#6, shipped)"
+  - "S-1.5 observability baseline (#5, shipped)"
+  - "S-1.7 CI parity (#2, shipped)"

@@ -1,0 +1,2 @@
+{"ts":"2026-05-12T00:00:00Z","event":"phase_deliver_bootstrap_complete","run_id":"2026-05-12-s-2-4-seller-listing"}
+{"ts":"2026-05-12T00:00:01Z","event":"phase_define_complete","run_id":"2026-05-12-s-2-4-seller-listing","acceptance_criteria_count":6,"issue":7}

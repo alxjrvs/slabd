@@ -1,0 +1,29 @@
+{
+  "skill": "implement:build",
+  "id": "cycle-3",
+  "status": "complete",
+  "checkpoints_reached": ["plan_written", "red_seen", "green_seen", "refactor_done", "local_review:passed"],
+  "artifacts_written": [
+    "lib/server/routes/listings-publish.ts",
+    "lib/server/__tests__/listings-publish.test.ts"
+  ],
+  "verifiable_evidence": {
+    "branch_sha_claimed": "523b6cc3b8938c407d835123d4e3a01273db1ccd",
+    "tests_passing": true,
+    "files_changed_claimed": [
+      "lib/server/routes/listings-publish.ts",
+      "lib/server/__tests__/listings-publish.test.ts"
+    ],
+    "test_command_used": "bun test"
+  },
+  "acs_covered": ["AC-2"],
+  "ac_test_evidence": [
+    { "ac_id": "AC-2", "test_name": "AC-2: returns 422 validation_failed with field map when series is missing" },
+    { "ac_id": "AC-2", "test_name": "AC-2: returns 422 with images_count=insufficient when only 1 image exists" },
+    { "ac_id": "AC-2", "test_name": "AC-2: happy path publishes a complete draft with 2+ images and returns published listing" },
+    { "ac_id": "AC-2", "test_name": "AC-2: returns 409 not_draft when listing is already published" }
+  ],
+  "proposed_ontology_terms": [],
+  "tokens_used": { "input": 0, "output": 0 },
+  "error": null
+}

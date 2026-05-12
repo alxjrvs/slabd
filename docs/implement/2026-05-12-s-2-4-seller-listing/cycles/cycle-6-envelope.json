@@ -1,0 +1,42 @@
+{
+  "skill": "implement:build",
+  "id": "cycle-6",
+  "status": "complete",
+  "checkpoints_reached": ["plan_written", "red_seen", "green_seen", "refactor_done", "local_review:passed"],
+  "artifacts_written": [
+    "app/(app)/sell/_layout.tsx",
+    "app/(app)/sell/index.tsx",
+    "app/(app)/sell/attributes.tsx",
+    "app/(app)/sell/photos.tsx",
+    "app/(app)/sell/review.tsx",
+    "app/(app)/index.tsx",
+    "app/__tests__/sell/sell-start.test.tsx",
+    "app/__tests__/sell/sell-attributes.test.tsx",
+    "app/__tests__/sell/sell-review.test.tsx"
+  ],
+  "verifiable_evidence": {
+    "branch_sha_claimed": "a78dcb83b35067c740a526ba709a5507a36bcd00",
+    "tests_passing": true,
+    "files_changed_claimed": [
+      "app/(app)/index.tsx",
+      "app/(app)/sell/_layout.tsx",
+      "app/(app)/sell/attributes.tsx",
+      "app/(app)/sell/index.tsx",
+      "app/(app)/sell/photos.tsx",
+      "app/(app)/sell/review.tsx",
+      "app/__tests__/sell/sell-attributes.test.tsx",
+      "app/__tests__/sell/sell-review.test.tsx",
+      "app/__tests__/sell/sell-start.test.tsx"
+    ],
+    "test_command_used": "bun test app/__tests__/sell/"
+  },
+  "acs_covered": ["AC-1", "AC-2", "AC-3"],
+  "ac_test_evidence": [
+    { "ac_id": "AC-1", "test_name": "AC-1: Continue navigates to attributes with draft id after creation succeeds" },
+    { "ac_id": "AC-2", "test_name": "AC-2: publish-success path navigates to home screen" },
+    { "ac_id": "AC-3", "test_name": "AC-3: publish-422 path shows inline error from response" }
+  ],
+  "proposed_ontology_terms": [],
+  "tokens_used": { "input": 0, "output": 0 },
+  "error": null
+}

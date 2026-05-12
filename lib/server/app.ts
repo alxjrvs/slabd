@@ -27,7 +27,26 @@ import {
   stripeWebhookHandler,
   type StripeWebhookDeps,
 } from "./routes/stripe-webhook";
-import { listingsStubHandler } from "./routes/listings-stub";
+import {
+  listingsDraftCreateHandler,
+  type ListingsDraftCreateDeps,
+} from "./routes/listings-draft-create";
+import {
+  listingsDraftUpdateHandler,
+  type ListingsDraftUpdateDeps,
+} from "./routes/listings-draft-update";
+import {
+  listingsDraftGetHandler,
+  type ListingsDraftGetDeps,
+} from "./routes/listings-draft-get";
+import {
+  listingsPublishHandler,
+  type ListingsPublishDeps,
+} from "./routes/listings-publish";
+import {
+  listingsListHandler,
+  type ListingsListDeps,
+} from "./routes/listings-list";
 import {
   createCatalogSearchHandler,
   type CatalogSearchDeps,
@@ -57,6 +76,11 @@ export interface CreateAppOptions extends ClerkAuthOptions {
   listingsImagesUploadUrlDeps?: ListingsImagesUploadUrlDeps;
   listingsImagesConfirmDeps?: ListingsImagesConfirmDeps;
   listingsImagesListDeps?: ListingsImagesListDeps;
+  listingsDraftCreateDeps?: ListingsDraftCreateDeps;
+  listingsDraftUpdateDeps?: ListingsDraftUpdateDeps;
+  listingsDraftGetDeps?: ListingsDraftGetDeps;
+  listingsPublishDeps?: ListingsPublishDeps;
+  listingsListDeps?: ListingsListDeps;
 }
 
 export function createApp(
@@ -71,6 +95,11 @@ export function createApp(
     listingsImagesUploadUrlDeps,
     listingsImagesConfirmDeps,
     listingsImagesListDeps,
+    listingsDraftCreateDeps,
+    listingsDraftUpdateDeps,
+    listingsDraftGetDeps,
+    listingsPublishDeps,
+    listingsListDeps,
     ...clerkAuthOptions
   } = options;
 
@@ -109,10 +138,25 @@ export function createApp(
   // Stripe webhook — NO Clerk auth; signature verification is the gate.
   app.post("/api/webhooks/stripe", stripeWebhookHandler(stripeWebhookDeps));
 
-  // Listings stub — Clerk-gated + seller-onboarded gate.
-  app.use("/api/listings", clerkAuth(clerkAuthOptions));
-  app.use("/api/listings", requireSellerOnboarded(requireSellerOnboardedOptions));
-  app.post("/api/listings", listingsStubHandler);
+  // POST /api/listings/draft — Clerk + onboarding gate.
+  app.use("/api/listings/draft", clerkAuth(clerkAuthOptions));
+  app.use("/api/listings/draft", requireSellerOnboarded(requireSellerOnboardedOptions));
+  app.post("/api/listings/draft", listingsDraftCreateHandler(listingsDraftCreateDeps));
+
+  // PATCH/GET /api/listings/draft/:id — Clerk + onboarding gate (ownership in handler).
+  app.use("/api/listings/draft/:id", clerkAuth(clerkAuthOptions));
+  app.use("/api/listings/draft/:id", requireSellerOnboarded(requireSellerOnboardedOptions));
+  app.patch("/api/listings/draft/:id", listingsDraftUpdateHandler(listingsDraftUpdateDeps));
+  app.get("/api/listings/draft/:id", listingsDraftGetHandler(listingsDraftGetDeps));
+
+  // GET /api/listings — PUBLIC index. No Clerk gate.
+  // Must be registered BEFORE /:id/publish to avoid route shadowing.
+  app.get("/api/listings", listingsListHandler(listingsListDeps));
+
+  // POST /api/listings/:id/publish — Clerk + onboarding gate (ownership in handler).
+  app.use("/api/listings/:id/publish", clerkAuth(clerkAuthOptions));
+  app.use("/api/listings/:id/publish", requireSellerOnboarded(requireSellerOnboardedOptions));
+  app.post("/api/listings/:id/publish", listingsPublishHandler(listingsPublishDeps));
 
   // Listings images: upload-url — Clerk-gated.
   app.use("/api/listings/:id/images/upload-url", clerkAuth(clerkAuthOptions));
