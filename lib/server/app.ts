@@ -28,6 +28,18 @@ import {
   type StripeWebhookDeps,
 } from "./routes/stripe-webhook";
 import { listingsStubHandler } from "./routes/listings-stub";
+import {
+  listingsImagesUploadUrlHandler,
+  type ListingsImagesUploadUrlDeps,
+} from "./routes/listings-images-upload-url";
+import {
+  listingsImagesConfirmHandler,
+  type ListingsImagesConfirmDeps,
+} from "./routes/listings-images-confirm";
+import {
+  listingsImagesListHandler,
+  type ListingsImagesListDeps,
+} from "./routes/listings-images-list";
 import type { AppVars } from "./types";
 
 export interface CreateAppOptions extends ClerkAuthOptions {
@@ -35,6 +47,9 @@ export interface CreateAppOptions extends ClerkAuthOptions {
   onboardingStatusDeps?: OnboardingStatusDeps;
   stripeWebhookDeps?: StripeWebhookDeps;
   requireSellerOnboardedOptions?: RequireSellerOnboardedOptions;
+  listingsImagesUploadUrlDeps?: ListingsImagesUploadUrlDeps;
+  listingsImagesConfirmDeps?: ListingsImagesConfirmDeps;
+  listingsImagesListDeps?: ListingsImagesListDeps;
 }
 
 export function createApp(
@@ -45,6 +60,9 @@ export function createApp(
     onboardingStatusDeps,
     stripeWebhookDeps,
     requireSellerOnboardedOptions,
+    listingsImagesUploadUrlDeps,
+    listingsImagesConfirmDeps,
+    listingsImagesListDeps,
     ...clerkAuthOptions
   } = options;
 
@@ -78,6 +96,26 @@ export function createApp(
   app.use("/api/listings", clerkAuth(clerkAuthOptions));
   app.use("/api/listings", requireSellerOnboarded(requireSellerOnboardedOptions));
   app.post("/api/listings", listingsStubHandler);
+
+  // Listings images: upload-url — Clerk-gated.
+  app.use("/api/listings/:id/images/upload-url", clerkAuth(clerkAuthOptions));
+  app.post(
+    "/api/listings/:id/images/upload-url",
+    listingsImagesUploadUrlHandler(listingsImagesUploadUrlDeps),
+  );
+
+  // Listings images: confirm — Clerk-gated.
+  app.use("/api/listings/:id/images/confirm", clerkAuth(clerkAuthOptions));
+  app.post(
+    "/api/listings/:id/images/confirm",
+    listingsImagesConfirmHandler(listingsImagesConfirmDeps),
+  );
+
+  // Listings images: list — PUBLIC (no Clerk gate, per REQ-004).
+  app.get(
+    "/api/listings/:id/images",
+    listingsImagesListHandler(listingsImagesListDeps),
+  );
 
   return app;
 }
