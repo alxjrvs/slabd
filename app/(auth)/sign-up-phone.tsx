@@ -7,7 +7,7 @@ import { Button, Field, Text, View } from "~/components/ds";
 import { isValidPhone } from "~/lib/identifier";
 import { logger, serializeError } from "~/lib/logger";
 
-export default function SignInPhoneScreen() {
+export default function SignUpPhoneScreen() {
   const router = useRouter();
   const { isLoaded, signUp } = useSignUp();
   const [phone, setPhone] = useState("");

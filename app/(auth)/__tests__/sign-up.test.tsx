@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
-import SignInScreen from "../sign-in";
+import SignUpScreen from "../sign-up";
 
 const mockRouterPush = jest.fn();
 const mockCreate = jest.fn();
@@ -29,15 +29,15 @@ beforeEach(() => {
   mockPrepareEmail.mockResolvedValue({});
 });
 
-describe("SignInScreen (AC-2 email sign-up)", () => {
+describe("SignUpScreen (AC-2 email sign-up)", () => {
   it("AC-6: renders an accessible email field and a 'Send code' submit button", () => {
-    render(<SignInScreen />);
+    render(<SignUpScreen />);
     expect(screen.getByLabelText("Email")).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Send code" })).toBeOnTheScreen();
   });
 
   it("AC-4: rejects invalid email addresses and shows an error", async () => {
-    render(<SignInScreen />);
+    render(<SignUpScreen />);
     fireEvent.changeText(screen.getByLabelText("Email"), "not-an-email");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {
@@ -47,7 +47,7 @@ describe("SignInScreen (AC-2 email sign-up)", () => {
   });
 
   it("AC-2: starts the Clerk sign-up flow with the email and prepares OTP", async () => {
-    render(<SignInScreen />);
+    render(<SignUpScreen />);
     fireEvent.changeText(screen.getByLabelText("Email"), "buyer@slabd.io");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {
@@ -57,7 +57,7 @@ describe("SignInScreen (AC-2 email sign-up)", () => {
   });
 
   it("AC-2: routes to the verify-email screen after a successful prepare call", async () => {
-    render(<SignInScreen />);
+    render(<SignUpScreen />);
     fireEvent.changeText(screen.getByLabelText("Email"), "buyer@slabd.io");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {

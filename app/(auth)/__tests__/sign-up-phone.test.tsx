@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
-import SignInPhoneScreen from "../sign-in-phone";
+import SignUpPhoneScreen from "../sign-up-phone";
 
 const mockRouterPush = jest.fn();
 const mockCreate = jest.fn();
@@ -28,15 +28,15 @@ beforeEach(() => {
   mockPreparePhone.mockResolvedValue({});
 });
 
-describe("SignInPhoneScreen (AC-3 phone sign-up)", () => {
+describe("SignUpPhoneScreen (AC-3 phone sign-up)", () => {
   it("AC-6: renders an accessible phone field and a 'Send code' submit", () => {
-    render(<SignInPhoneScreen />);
+    render(<SignUpPhoneScreen />);
     expect(screen.getByLabelText("Phone number")).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Send code" })).toBeOnTheScreen();
   });
 
   it("AC-4: rejects values that are not E.164 phone numbers", async () => {
-    render(<SignInPhoneScreen />);
+    render(<SignUpPhoneScreen />);
     fireEvent.changeText(screen.getByLabelText("Phone number"), "555-not-a-phone");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {
@@ -46,7 +46,7 @@ describe("SignInPhoneScreen (AC-3 phone sign-up)", () => {
   });
 
   it("AC-3: starts the Clerk sign-up flow with the phone number and prepares OTP", async () => {
-    render(<SignInPhoneScreen />);
+    render(<SignUpPhoneScreen />);
     fireEvent.changeText(screen.getByLabelText("Phone number"), "+15555550101");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {
@@ -56,7 +56,7 @@ describe("SignInPhoneScreen (AC-3 phone sign-up)", () => {
   });
 
   it("AC-3: routes to the verify-phone screen with the phone as a param", async () => {
-    render(<SignInPhoneScreen />);
+    render(<SignUpPhoneScreen />);
     fireEvent.changeText(screen.getByLabelText("Phone number"), "+15555550101");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => {

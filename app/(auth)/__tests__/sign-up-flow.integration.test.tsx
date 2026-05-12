@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
-import SignInScreen from "../sign-in";
+import SignUpScreen from "../sign-up";
 import VerifyEmailScreen from "../verify-email";
 
 const mockCreate = jest.fn();
@@ -43,7 +43,7 @@ describe("AC-4 + AC-7 email sign-up integration", () => {
   it("AC-4/AC-7: drives email → OTP → authed-home end-to-end in well under 90s", async () => {
     const start = Date.now();
 
-    const { unmount } = render(<SignInScreen />);
+    const { unmount } = render(<SignUpScreen />);
 
     fireEvent.changeText(screen.getByLabelText("Email"), "buyer@slabd.io");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));
