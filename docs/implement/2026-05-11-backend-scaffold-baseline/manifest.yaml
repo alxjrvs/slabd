@@ -1,6 +1,6 @@
 run_id: 2026-05-11-backend-scaffold-baseline
 status: in_flight
-phase: phase_scope_complete
+phase: phase_integrate_complete
 planned_cycles: 4
 dep_graph:
   cycle-1: []
