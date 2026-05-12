@@ -1,0 +1,20 @@
+name = "slabd-web"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-05-11"
+compatibility_flags = ["nodejs_compat"]
+
+# Non-secret environment variables shared across all environments.
+# Currently none — add public config here as needed.
+[vars]
+
+# Production environment secrets.
+# Secrets are NOT declared here — set them via the Cloudflare dashboard or:
+#   wrangler pages secret put DATABASE_URL        --project-name slabd-web
+#   wrangler pages secret put CLERK_SECRET_KEY    --project-name slabd-web
+#   wrangler pages secret put CLERK_PUBLISHABLE_KEY --project-name slabd-web
+[env.production.vars]
+
+# Preview environment secrets (per-branch deploys).
+# Same secret names — set via Cloudflare dashboard or wrangler pages secret put
+# with the --env preview flag.
+[env.preview.vars]
