@@ -24,6 +24,30 @@ jobs:
       - run: bun run lint
       - run: bun run test:ci
 
+  check-stripe-config:
+    name: check stripe config
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        env:
+          STRIPE_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          APP_URL: ${{ secrets.EXPO_PUBLIC_APP_URL }}
+        run: |
+          missing=""
+          if [ -z "$STRIPE_KEY" ]; then
+            missing="$missing STRIPE_SECRET_KEY"
+          fi
+          if [ -z "$STRIPE_WEBHOOK" ]; then
+            missing="$missing STRIPE_WEBHOOK_SECRET"
+          fi
+          if [ -z "$APP_URL" ]; then
+            missing="$missing EXPO_PUBLIC_APP_URL"
+          fi
+          if [ -n "$missing" ]; then
+            echo "::warning::Stripe secrets not set:$missing — Stripe Connect features will not work in this environment"
+          fi
+
   check-e2e-secret:
     name: check e2e secret
     runs-on: ubuntu-latest
