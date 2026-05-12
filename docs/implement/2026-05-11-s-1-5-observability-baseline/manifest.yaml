@@ -1,6 +1,8 @@
 run_id: 2026-05-11-s-1-5-observability-baseline
-status: in_flight
-phase: phase_bootstrap_complete
+status: shipped
+phase: phase_deliver_complete
+shipped_pr: 42
+shipped_sha: cf0e0a1349f458eaf909a0a63ae4ae4fccbf7e24
 planned_cycles: 3
 dep_graph:
   cycle-1: []
