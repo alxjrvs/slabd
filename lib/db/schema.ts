@@ -1,4 +1,5 @@
-import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import type { CatalogMatch } from "../server/catalog/types";
 
 export const stripeWebhookEvents = pgTable("stripe_webhook_events", {
   eventId: text("event_id").primaryKey(),
@@ -21,6 +22,13 @@ export const sellerAccounts = pgTable("seller_accounts", {
   payoutsEnabled: boolean("payouts_enabled").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const catalogSearchCache = pgTable("catalog_search_cache", {
+  queryKey: text("query_key").primaryKey(),
+  payload: jsonb("payload").$type<CatalogMatch[]>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
 
 export const listingImages = pgTable("images", {

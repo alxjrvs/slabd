@@ -29,6 +29,10 @@ import {
 } from "./routes/stripe-webhook";
 import { listingsStubHandler } from "./routes/listings-stub";
 import {
+  createCatalogSearchHandler,
+  type CatalogSearchDeps,
+} from "./routes/catalog-search";
+import {
   listingsImagesUploadUrlHandler,
   type ListingsImagesUploadUrlDeps,
 } from "./routes/listings-images-upload-url";
@@ -40,6 +44,8 @@ import {
   listingsImagesListHandler,
   type ListingsImagesListDeps,
 } from "./routes/listings-images-list";
+import { FixtureCatalogAdapter } from "./catalog/fixture-adapter";
+import { db as defaultDb } from "~/lib/db";
 import type { AppVars } from "./types";
 
 export interface CreateAppOptions extends ClerkAuthOptions {
@@ -47,6 +53,7 @@ export interface CreateAppOptions extends ClerkAuthOptions {
   onboardingStatusDeps?: OnboardingStatusDeps;
   stripeWebhookDeps?: StripeWebhookDeps;
   requireSellerOnboardedOptions?: RequireSellerOnboardedOptions;
+  catalogSearchDeps?: CatalogSearchDeps;
   listingsImagesUploadUrlDeps?: ListingsImagesUploadUrlDeps;
   listingsImagesConfirmDeps?: ListingsImagesConfirmDeps;
   listingsImagesListDeps?: ListingsImagesListDeps;
@@ -60,11 +67,21 @@ export function createApp(
     onboardingStatusDeps,
     stripeWebhookDeps,
     requireSellerOnboardedOptions,
+    catalogSearchDeps,
     listingsImagesUploadUrlDeps,
     listingsImagesConfirmDeps,
     listingsImagesListDeps,
     ...clerkAuthOptions
   } = options;
+
+  const ttlDays =
+    parseInt(process.env.CATALOG_CACHE_TTL_DAYS ?? "", 10) || 30;
+
+  const resolvedCatalogSearchDeps: CatalogSearchDeps = catalogSearchDeps ?? {
+    db: defaultDb as unknown as CatalogSearchDeps["db"],
+    adapter: new FixtureCatalogAdapter(),
+    env: { CATALOG_CACHE_TTL_DAYS: ttlDays },
+  };
 
   const app = new Hono<{ Variables: AppVars }>();
 
@@ -116,6 +133,10 @@ export function createApp(
     "/api/listings/:id/images",
     listingsImagesListHandler(listingsImagesListDeps),
   );
+
+  // Catalog search — Clerk-gated.
+  app.use("/api/catalog/search", clerkAuth(clerkAuthOptions));
+  app.get("/api/catalog/search", createCatalogSearchHandler(resolvedCatalogSearchDeps));
 
   return app;
 }

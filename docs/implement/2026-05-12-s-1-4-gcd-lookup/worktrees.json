@@ -1,0 +1,16 @@
+{
+  "run_id": "2026-05-12-s-1-4-gcd-lookup",
+  "parent_sha": "f62fe9893aae6ce8e19537e78e57f3aaa03e1320",
+  "worktrees": [
+    {
+      "cycle": "cycle-2",
+      "path": ".worktrees/2026-05-12-s-1-4-gcd-lookup/cycle-2",
+      "branch": "cycle-2/2026-05-12-s-1-4-gcd-lookup"
+    },
+    {
+      "cycle": "cycle-3",
+      "path": ".worktrees/2026-05-12-s-1-4-gcd-lookup/cycle-3",
+      "branch": "cycle-3/2026-05-12-s-1-4-gcd-lookup"
+    }
+  ]
+}

@@ -8,6 +8,27 @@
       "when": 1778545698323,
       "tag": "0000_glossy_vertigo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778659553000,
+      "tag": "0001_stripe_webhook_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778830000000,
+      "tag": "0002_images",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779000000000,
+      "tag": "0003_catalog_search_cache",
+      "breakpoints": true
     }
   ]
 }
