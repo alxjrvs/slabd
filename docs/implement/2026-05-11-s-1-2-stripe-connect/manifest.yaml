@@ -1,0 +1,55 @@
+run_id: 2026-05-11-s-1-2-stripe-connect
+status: in_flight
+phase: phase_0_plan_complete
+planned_cycles: 5
+dep_graph:
+  cycle-1: []
+  cycle-2: [cycle-1]
+  cycle-3: [cycle-1]
+  cycle-4: [cycle-1]
+  cycle-5: [cycle-2, cycle-3, cycle-4]
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: 156fe3e781fad0b113ec79494c8f3ffcedd8f1d0
+  run_branch: run/2026-05-11-s-1-2-stripe-connect
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 3
+issue_body_sha:
+  "3": 6aa97052e1570a4206c1adf99d37f867a45ad120
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  S-1.2 Seller onboards via Stripe Connect Express. Builds atop the
+  backend scaffold (#46) which already provisions a `seller_accounts`
+  table with `stripe_account_id` + `onboarding_status` columns. Targets
+  REQ-006 (escrow processor), REQ-008 (dual buyer/seller mode), REQ-009
+  (verified-tier badge precursor — onboarding state surfaces in profile),
+  REQ-030 (Stripe Connect). Sandbox Stripe Connect Express flow: create
+  Account → Account Link → return from Stripe → reconcile via webhook →
+  gate listing publication on completed onboarding.
+language: typescript
+constraints:
+  - Conventional commits, pre-commit hooks must pass
+  - No console.* in production code (use lib/logger from S-1.5)
+  - Stripe SDK must be Workers-compatible (use `stripe` package with `fetch` httpClient or REST via fetch)
+  - Webhook signature verification networkless (no API call to verify)
+  - All new env vars declared in .env.example AND wrangler.toml
+  - Idempotent webhook handling — record processed event IDs in DB
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0
