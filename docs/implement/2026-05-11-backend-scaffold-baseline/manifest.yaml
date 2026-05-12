@@ -1,6 +1,8 @@
 run_id: 2026-05-11-backend-scaffold-baseline
-status: in_flight
-phase: phase_review_complete
+status: shipped
+phase: phase_deliver_complete
+shipped_pr: 46
+shipped_sha: 9cc514e
 planned_cycles: 4
 dep_graph:
   cycle-1: []
