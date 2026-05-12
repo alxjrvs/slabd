@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Switch } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
+import { useAuth } from "~/lib/auth";
 import { logger, serializeError } from "~/lib/logger";
 import { useTheme } from "~/lib/theme-provider";
 
@@ -32,30 +33,32 @@ function readPrefs(metadata: unknown): NotificationPrefs {
 
 export default function AccountScreen() {
   const { user } = useUser();
+  const { user: authUser } = useAuth();
   const { signOut } = useClerk();
   const theme = useTheme();
 
   const initialPrefs = useMemo(() => readPrefs(user?.unsafeMetadata), [user?.unsafeMetadata]);
 
-  const [firstName, setFirstName] = useState(user?.firstName ?? "");
-  const [lastName, setLastName] = useState(user?.lastName ?? "");
+  const initialFirstName = authUser.kind === "signed-in" ? (authUser.firstName ?? "") : "";
+  const initialLastName = authUser.kind === "signed-in" ? (authUser.lastName ?? "") : "";
+  const identifier = authUser.kind === "signed-in" ? authUser.identifier : "";
+
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
   const [prefs, setPrefs] = useState<NotificationPrefs>(initialPrefs);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = user?.id;
+  const userId = authUser.kind === "signed-in" ? authUser.id : null;
   useEffect(() => {
-    setFirstName(user?.firstName ?? "");
-    setLastName(user?.lastName ?? "");
+    setFirstName(initialFirstName);
+    setLastName(initialLastName);
     setPrefs(initialPrefs);
     // Only resync form state when the signed-in identity changes — not on
     // every Clerk reload (which would clobber unsaved edits after a save).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
-
-  const identifier =
-    user?.primaryEmailAddress?.emailAddress ?? user?.primaryPhoneNumber?.phoneNumber ?? "";
 
   const handleSave = async () => {
     if (!user) return;

@@ -44,10 +44,26 @@ jest.mock("@clerk/clerk-expo", () => ({
   useClerk: () => ({ signOut: mockSignOut }),
 }));
 
+const mockUseAuth = jest.fn();
+jest.mock("~/lib/auth", () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
   mockUpdate.mockResolvedValue(undefined);
   mockUseUser.mockReturnValue({ isLoaded: true, isSignedIn: true, user: buildUser() });
+  mockUseAuth.mockReturnValue({
+    isLoaded: true,
+    user: {
+      kind: "signed-in",
+      id: "user_1",
+      identifier: "buyer@slabd.io",
+      firstName: "Buyer",
+      lastName: "One",
+    },
+    signOut: jest.fn(),
+  });
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
 

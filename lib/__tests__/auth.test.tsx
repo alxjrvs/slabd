@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-native";
 
-import { useAuth } from "../auth";
+import { useAuth, type AuthUser } from "../auth";
 
 const mockUseClerkAuth = jest.fn();
 const mockUseUser = jest.fn();
@@ -17,7 +17,7 @@ beforeEach(() => {
   mockClerkSignOut.mockResolvedValue(undefined);
 });
 
-describe("useAuth() — Clerk adapter", () => {
+describe("useAuth() — Clerk adapter (AuthUser discriminated union)", () => {
   it("AC-2: reports isLoaded=false while either Clerk hook is loading", () => {
     mockUseClerkAuth.mockReturnValue({
       isLoaded: false,
@@ -28,11 +28,10 @@ describe("useAuth() — Clerk adapter", () => {
 
     const { result } = renderHook(() => useAuth());
     expect(result.current.isLoaded).toBe(false);
-    expect(result.current.isSignedIn).toBe(false);
-    expect(result.current.user).toBeNull();
+    expect(result.current.user).toEqual({ kind: "signed-out" });
   });
 
-  it("AC-2: maps a signed-in Clerk user to the AuthUser shape (email identifier)", () => {
+  it("AC-2: maps a signed-in Clerk user to the signed-in variant (email identifier)", () => {
     mockUseClerkAuth.mockReturnValue({
       isLoaded: true,
       isSignedIn: true,
@@ -42,6 +41,8 @@ describe("useAuth() — Clerk adapter", () => {
       isLoaded: true,
       user: {
         id: "user_123",
+        firstName: "Ada",
+        lastName: "Lovelace",
         primaryEmailAddress: { emailAddress: "buyer@slabd.io" },
         primaryPhoneNumber: null,
       },
@@ -49,11 +50,16 @@ describe("useAuth() — Clerk adapter", () => {
 
     const { result } = renderHook(() => useAuth());
     expect(result.current.isLoaded).toBe(true);
-    expect(result.current.isSignedIn).toBe(true);
-    expect(result.current.user).toEqual({ id: "user_123", identifier: "buyer@slabd.io" });
+    expect(result.current.user).toEqual({
+      kind: "signed-in",
+      id: "user_123",
+      identifier: "buyer@slabd.io",
+      firstName: "Ada",
+      lastName: "Lovelace",
+    });
   });
 
-  it("AC-3: falls back to the phone number when no email is set", () => {
+  it("AC-2: falls back to the phone number when no email is set", () => {
     mockUseClerkAuth.mockReturnValue({
       isLoaded: true,
       isSignedIn: true,
@@ -63,13 +69,21 @@ describe("useAuth() — Clerk adapter", () => {
       isLoaded: true,
       user: {
         id: "user_456",
+        firstName: null,
+        lastName: null,
         primaryEmailAddress: null,
         primaryPhoneNumber: { phoneNumber: "+15555550101" },
       },
     });
 
     const { result } = renderHook(() => useAuth());
-    expect(result.current.user).toEqual({ id: "user_456", identifier: "+15555550101" });
+    expect(result.current.user).toEqual({
+      kind: "signed-in",
+      id: "user_456",
+      identifier: "+15555550101",
+      firstName: null,
+      lastName: null,
+    });
   });
 
   it("AC-2: signOut delegates to Clerk's signOut", async () => {
@@ -80,10 +94,31 @@ describe("useAuth() — Clerk adapter", () => {
     });
     mockUseUser.mockReturnValue({
       isLoaded: true,
-      user: { id: "user_1", primaryEmailAddress: { emailAddress: "buyer@slabd.io" } },
+      user: {
+        id: "user_1",
+        firstName: null,
+        lastName: null,
+        primaryEmailAddress: { emailAddress: "buyer@slabd.io" },
+      },
     });
     const { result } = renderHook(() => useAuth());
     await result.current.signOut();
     expect(mockClerkSignOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("AC-2 type-level: AuthUser requires narrowing on `kind` before accessing signed-in fields", () => {
+    // Type-only check: TS must reject accessing firstName without narrowing.
+    // Wrapped in a function never called at runtime — purely a compile-time
+    // assertion via @ts-expect-error.
+    const _typeGuard = (u: AuthUser) => {
+      // @ts-expect-error — property 'firstName' does not exist on the union
+      void u.firstName;
+      if (u.kind === "signed-in") {
+        // After narrowing, firstName is accessible:
+        void u.firstName;
+      }
+    };
+    void _typeGuard;
+    expect(true).toBe(true);
   });
 });

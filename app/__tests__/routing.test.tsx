@@ -6,7 +6,7 @@ import IndexRoute from "../index";
 
 jest.mock("~/lib/auth", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => children,
-  useAuth: () => ({ isLoaded: true, isSignedIn: false, user: null, signOut: jest.fn() }),
+  useAuth: () => ({ isLoaded: true, user: { kind: "signed-out" }, signOut: jest.fn() }),
 }));
 
 jest.mock("expo-router", () => {
