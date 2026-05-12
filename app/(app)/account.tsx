@@ -48,6 +48,7 @@ export default function AccountScreen() {
   const [prefs, setPrefs] = useState<NotificationPrefs>(initialPrefs);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const userId = authUser.kind === "signed-in" ? authUser.id : null;
@@ -90,6 +91,24 @@ export default function AccountScreen() {
 
   const togglePref = (key: keyof NotificationPrefs) =>
     setPrefs((current) => ({ ...current, [key]: !current[key] }));
+
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    setError(null);
+    try {
+      await signOut();
+    } catch (err) {
+      logger.error("account: signOut failed", {
+        flow: "account.signOut",
+        error: serializeError(err),
+      });
+      setError("Couldn't sign out. Please try again.");
+      setSigningOut(false);
+    }
+    // On success the auth state flips and this screen unmounts; deliberately
+    // leave `signingOut` set so a late tap can't queue a second teardown.
+  };
 
   return (
     <ScrollView
@@ -135,7 +154,13 @@ export default function AccountScreen() {
       ) : null}
 
       <Button label="Save changes" onPress={handleSave} loading={submitting} />
-      <Button label="Sign out" variant="secondary" onPress={() => signOut()} />
+      <Button
+        label="Sign out"
+        variant="secondary"
+        onPress={handleSignOut}
+        loading={signingOut}
+        disabled={signingOut}
+      />
     </ScrollView>
   );
 }

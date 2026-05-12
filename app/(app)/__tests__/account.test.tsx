@@ -116,6 +116,47 @@ describe("AccountScreen (AC-5 profile editing)", () => {
     });
   });
 
+  // AC-2 (#37): double-tap guard — a rapid second press while signOut is
+  // still in-flight must NOT fire a second signOut. Otherwise we race two
+  // session teardowns against Clerk and (worse) confuse the user with two
+  // redirects.
+  it("AC-2 (#37): double-tap on Sign out invokes Clerk.signOut exactly once", async () => {
+    let resolveSignOut: () => void = () => {};
+    mockSignOut.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSignOut = resolve;
+        }),
+    );
+    render(<AccountScreen />);
+    const button = screen.getByRole("button", { name: "Sign out" });
+    fireEvent.press(button);
+    fireEvent.press(button);
+    fireEvent.press(button);
+    // Three presses while the first signOut is still pending. Only one call.
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    resolveSignOut();
+    await waitFor(() => {
+      expect(mockSignOut).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("AC-2 (#37): a rejected signOut clears the pending guard so the user can retry", async () => {
+    mockSignOut.mockRejectedValueOnce(new Error("network down"));
+    mockSignOut.mockResolvedValueOnce(undefined);
+    render(<AccountScreen />);
+    const button = screen.getByRole("button", { name: "Sign out" });
+    fireEvent.press(button);
+    await waitFor(() => {
+      expect(mockSignOut).toHaveBeenCalledTimes(1);
+    });
+    // Guard must have cleared — second press fires a fresh signOut.
+    fireEvent.press(button);
+    await waitFor(() => {
+      expect(mockSignOut).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it("AC-5: preserves other unsafeMetadata keys when saving notification prefs", async () => {
     mockUseUser.mockReturnValue({
       isLoaded: true,
