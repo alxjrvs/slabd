@@ -8,7 +8,13 @@ module.exports = {
     "<rootDir>/**/__tests__/**/*.(test|spec).(ts|tsx)",
     "<rootDir>/**/*.(test|spec).(ts|tsx)",
   ],
-  testPathIgnorePatterns: ["/node_modules/", "/tests/e2e/", "/.expo/"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/tests/e2e/",
+    "/.expo/",
+    "/.claude/",
+    "/.worktrees/",
+  ],
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/$1",
   },
