@@ -99,8 +99,12 @@ export function createCatalogSearchHandler(deps: CatalogSearchDeps) {
     let cached: CatalogMatch[] | null = null;
     try {
       cached = await readCache(deps.db, key);
-    } catch {
-      // readCache failure is non-fatal — treat as a cache miss.
+    } catch (err) {
+      log.warn("catalog-search: cache read failed, treating as miss", {
+        err: serializeError(err),
+        queryKey: key,
+        query: normalized,
+      });
     }
 
     if (cached !== null) {

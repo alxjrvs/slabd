@@ -33,6 +33,7 @@ import {
   type CatalogSearchDeps,
 } from "./routes/catalog-search";
 import { FixtureCatalogAdapter } from "./catalog/fixture-adapter";
+import { db as defaultDb } from "~/lib/db";
 import type { AppVars } from "./types";
 
 export interface CreateAppOptions extends ClerkAuthOptions {
@@ -59,7 +60,7 @@ export function createApp(
     parseInt(process.env.CATALOG_CACHE_TTL_DAYS ?? "", 10) || 30;
 
   const resolvedCatalogSearchDeps: CatalogSearchDeps = catalogSearchDeps ?? {
-    db: {} as CatalogSearchDeps["db"],
+    db: defaultDb as unknown as CatalogSearchDeps["db"],
     adapter: new FixtureCatalogAdapter(),
     env: { CATALOG_CACHE_TTL_DAYS: ttlDays },
   };

@@ -10,7 +10,8 @@
  * - computeQueryKey: key ordering and undefined fields don't affect hash
  * - readCache: returns payload on hit
  * - readCache: returns null on miss
- * - readCache: expired entries excluded (where condition shape)
+ * - readCache: WHERE uses gt(expiresAt, new Date()) — catches a gt→gte flip
+ * - readCache: behavioral — future-expiry row hits, past-expiry row is filtered
  * - writeCache: insert with correct expires_at offset
  * - writeCache: swallows error + logs warn on failure
  */
@@ -22,7 +23,50 @@ import {
   writeCache,
 } from "../cache";
 import { logger } from "~/lib/logger";
+import { catalogSearchCache } from "~/lib/db/schema";
 import type { CatalogMatch } from "../types";
+
+// Mock drizzle-orm operators so the WHERE condition is inspectable and
+// replayable in tests. jest.mock is hoisted above all imports at compile
+// time. Other drizzle entrypoints (drizzle-orm/pg-core, drizzle-orm/neon-http)
+// are untouched, so schema and client load normally.
+jest.mock("drizzle-orm", () => ({
+  __esModule: true,
+  eq: (col: unknown, val: unknown) => ({ __op: "eq" as const, col, val }),
+  gt: (col: unknown, val: unknown) => ({ __op: "gt" as const, col, val }),
+  and: (...args: unknown[]) => ({ __op: "and" as const, args }),
+}));
+
+// ---------------------------------------------------------------------------
+// Captured-condition descriptor types (output of the drizzle-orm mock above)
+// ---------------------------------------------------------------------------
+
+type EqCond = { __op: "eq"; col: unknown; val: unknown };
+type GtCond = { __op: "gt"; col: unknown; val: unknown };
+type AndCond = { __op: "and"; args: Condition[] };
+type Condition = EqCond | GtCond | AndCond;
+
+function applyCondition(cond: Condition, row: Record<string, unknown>): boolean {
+  if (cond.__op === "and") return cond.args.every((sub) => applyCondition(sub, row));
+  if (cond.__op === "eq") return getColumnValue(cond.col, row) === cond.val;
+  if (cond.__op === "gt") {
+    const left = getColumnValue(cond.col, row);
+    const right = cond.val;
+    if (left instanceof Date && right instanceof Date) {
+      return left.getTime() > right.getTime();
+    }
+    return (left as number) > (right as number);
+  }
+  return false;
+}
+
+function getColumnValue(col: unknown, row: Record<string, unknown>): unknown {
+  if (col === catalogSearchCache.queryKey) return row.queryKey;
+  if (col === catalogSearchCache.expiresAt) return row.expiresAt;
+  if (col === catalogSearchCache.payload) return row.payload;
+  if (col === catalogSearchCache.createdAt) return row.createdAt;
+  throw new Error("applyCondition: unknown column reference");
+}
 
 // ---------------------------------------------------------------------------
 // Test fixtures
@@ -167,13 +211,13 @@ describe("readCache", () => {
     expect(result).toBeNull();
   });
 
-  it("passes a non-undefined where condition (expired entries excluded by clause)", async () => {
-    let capturedCondition: unknown;
+  it("issues WHERE = and(eq(queryKey, key), gt(expiresAt, new Date())) — catches a gt→gte flip", async () => {
+    let capturedCondition: Condition | undefined;
     const mockDb = {
       select: () => ({
         from: () => ({
-          where: (condition: unknown) => {
-            capturedCondition = condition;
+          where: (cond: Condition) => {
+            capturedCondition = cond;
             return Promise.resolve([]);
           },
         }),
@@ -181,8 +225,71 @@ describe("readCache", () => {
       insert: jest.fn(),
     };
 
-    await readCache(mockDb as never, "any-key");
-    expect(capturedCondition).not.toBeUndefined();
+    const before = Date.now();
+    await readCache(mockDb as never, "some-key");
+    const after = Date.now();
+
+    expect(capturedCondition).toBeDefined();
+    expect(capturedCondition!.__op).toBe("and");
+    const and = capturedCondition as AndCond;
+    expect(and.args).toHaveLength(2);
+
+    const first = and.args[0]!;
+    const second = and.args[1]!;
+    expect(first.__op).toBe("eq");
+    const eq = first as EqCond;
+    expect(eq.col).toBe(catalogSearchCache.queryKey);
+    expect(eq.val).toBe("some-key");
+
+    expect(second.__op).toBe("gt");
+    const gt = second as GtCond;
+    expect(gt.col).toBe(catalogSearchCache.expiresAt);
+    expect(gt.val).toBeInstanceOf(Date);
+    const valTime = (gt.val as Date).getTime();
+    expect(valTime).toBeGreaterThanOrEqual(before);
+    expect(valTime).toBeLessThanOrEqual(after);
+  });
+
+  it("behavioral: future-expiry row passes the WHERE filter → cache hit", async () => {
+    const futureRow = {
+      queryKey: "boundary-key",
+      payload: [sampleMatch],
+      expiresAt: new Date(Date.now() + 60_000),
+    };
+
+    const mockDb = {
+      select: () => ({
+        from: () => ({
+          where: (cond: Condition) =>
+            Promise.resolve([futureRow].filter((r) => applyCondition(cond, r))),
+        }),
+      }),
+      insert: jest.fn(),
+    };
+
+    const result = await readCache(mockDb as never, "boundary-key");
+    expect(result).toEqual([sampleMatch]);
+  });
+
+  it("behavioral: past-expiry row is excluded by the WHERE filter → cache miss", async () => {
+    const pastRow = {
+      queryKey: "boundary-key",
+      payload: [sampleMatch],
+      expiresAt: new Date(Date.now() - 60_000),
+    };
+
+    const mockDb = {
+      select: () => ({
+        from: () => ({
+          where: (cond: Condition) =>
+            Promise.resolve([pastRow].filter((r) => applyCondition(cond, r))),
+        }),
+      }),
+      insert: jest.fn(),
+    };
+
+    const result = await readCache(mockDb as never, "boundary-key");
+    expect(result).toBeNull();
   });
 });
 

@@ -10,6 +10,13 @@
       "breakpoints": true
     },
     {
+      "idx": 1,
+      "version": "7",
+      "when": 1778659553000,
+      "tag": "0001_stripe_webhook_events",
+      "breakpoints": true
+    },
+    {
       "idx": 3,
       "version": "7",
       "when": 1779000000000,
