@@ -17,7 +17,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --reporters=default",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "dev:api": "bunx expo start --web --port 8081"
   },
   "dependencies": {
     "@clerk/backend": "^1",
