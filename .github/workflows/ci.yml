@@ -48,6 +48,18 @@ jobs:
             echo "::warning::Stripe secrets not set:$missing — Stripe Connect features will not work in this environment"
           fi
 
+  check-catalog-config:
+    name: check catalog config
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        env:
+          CATALOG_CACHE_TTL_DAYS: ${{ secrets.CATALOG_CACHE_TTL_DAYS }}
+        run: |
+          if [ -z "$CATALOG_CACHE_TTL_DAYS" ]; then
+            echo "::warning::CATALOG_CACHE_TTL_DAYS not set — default of 30 days will be used for catalog_search_cache TTL"
+          fi
+
   check-e2e-secret:
     name: check e2e secret
     runs-on: ubuntu-latest

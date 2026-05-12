@@ -1,0 +1,83 @@
+[
+  {
+    "catalogId": "marvel-asm-129",
+    "series": "Amazing Spider-Man",
+    "issueNumber": "129",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1974,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=ASM+%23129"
+  },
+  {
+    "catalogId": "marvel-asm-300",
+    "series": "Amazing Spider-Man",
+    "issueNumber": "300",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1988,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=ASM+%23300"
+  },
+  {
+    "catalogId": "dc-batman-251",
+    "series": "Batman",
+    "issueNumber": "251",
+    "publisher": "DC Comics",
+    "publishedYear": 1973,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=Batman+%23251"
+  },
+  {
+    "catalogId": "dc-batman-357",
+    "series": "Batman",
+    "issueNumber": "357",
+    "publisher": "DC Comics",
+    "publishedYear": 1983,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=Batman+%23357"
+  },
+  {
+    "catalogId": "marvel-xmen-1",
+    "series": "X-Men",
+    "issueNumber": "1",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1963,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=X-Men+%231"
+  },
+  {
+    "catalogId": "marvel-xmen-94",
+    "series": "X-Men",
+    "issueNumber": "94",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1975,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=X-Men+%2394"
+  },
+  {
+    "catalogId": "dc-action-comics-1",
+    "series": "Action Comics",
+    "issueNumber": "1",
+    "publisher": "DC Comics",
+    "publishedYear": 1938,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=Action+Comics+%231"
+  },
+  {
+    "catalogId": "marvel-ff-1",
+    "series": "Fantastic Four",
+    "issueNumber": "1",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1961,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=FF+%231"
+  },
+  {
+    "catalogId": "marvel-asm-252-newsstand",
+    "series": "Amazing Spider-Man",
+    "issueNumber": "252",
+    "variant": "Newsstand Edition",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1984,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=ASM+%23252+Newsstand"
+  },
+  {
+    "catalogId": "marvel-asm-252",
+    "series": "Amazing Spider-Man",
+    "issueNumber": "252",
+    "publisher": "Marvel Comics",
+    "publishedYear": 1984,
+    "coverThumbnailUrl": "https://placehold.co/120x180?text=ASM+%23252"
+  }
+]

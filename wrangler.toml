@@ -6,6 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # Non-secret environment variables shared across all environments.
 # Currently none — add public config here as needed.
 [vars]
+# CATALOG_CACHE_TTL_DAYS = "30"
 
 # Production environment secrets.
 # Secrets are NOT declared here — set them via the Cloudflare dashboard or:
