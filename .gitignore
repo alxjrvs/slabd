@@ -1,5 +1,7 @@
 # Dependencies
-node_modules/
+# Use bare `node_modules` (no trailing slash) so it matches both directories
+# and the symlink that the worktree harness creates inside `.worktrees/`.
+node_modules
 
 # Expo
 .expo/
