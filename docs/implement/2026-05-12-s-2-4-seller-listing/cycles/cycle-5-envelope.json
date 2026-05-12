@@ -1,0 +1,31 @@
+{
+  "skill": "implement:build",
+  "id": "cycle-5",
+  "status": "complete",
+  "checkpoints_reached": ["plan_written", "red_seen", "green_seen", "refactor_done", "local_review:passed"],
+  "artifacts_written": [
+    "lib/server/app.ts",
+    "lib/server/__tests__/listings-gate.test.ts",
+    "lib/server/routes/listings-stub.ts",
+    "lib/server/__tests__/listings-lifecycle-integration.test.ts"
+  ],
+  "verifiable_evidence": {
+    "branch_sha_claimed": "b35050358c54ae4da5b59d836e107a2387215fad",
+    "tests_passing": true,
+    "files_changed_claimed": [
+      "lib/server/__tests__/listings-gate.test.ts",
+      "lib/server/__tests__/listings-lifecycle-integration.test.ts",
+      "lib/server/app.ts",
+      "lib/server/routes/listings-stub.ts"
+    ],
+    "test_command_used": "bun test lib/server/__tests__/listings-lifecycle-integration.test.ts"
+  },
+  "acs_covered": ["AC-1", "AC-5"],
+  "ac_test_evidence": [
+    { "ac_id": "AC-1", "test_name": "AC-1: persists draft attributes across resume — second GET returns patched values" },
+    { "ac_id": "AC-5", "test_name": "AC-5: public listings index no auth required — returns published listings without Authorization header" }
+  ],
+  "proposed_ontology_terms": [],
+  "tokens_used": { "input": 0, "output": 0 },
+  "error": null
+}

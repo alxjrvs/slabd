@@ -1,0 +1,37 @@
+{
+  "skill": "implement:build",
+  "id": "cycle-4",
+  "status": "complete",
+  "checkpoints_reached": ["plan_written", "red_seen", "green_seen", "refactor_done", "local_review:passed"],
+  "artifacts_written": [
+    "lib/server/routes/listings-list.ts",
+    "lib/server/__tests__/listings-list.test.ts"
+  ],
+  "verifiable_evidence": {
+    "branch_sha_claimed": "21829766bf97671b27cbbd2ee27d652c93573be8",
+    "tests_passing": true,
+    "files_changed_claimed": [
+      "lib/server/routes/listings-list.ts",
+      "lib/server/__tests__/listings-list.test.ts"
+    ],
+    "test_command_used": "bun test"
+  },
+  "acs_covered": ["AC-3"],
+  "ac_test_evidence": [
+    {
+      "ac_id": "AC-3",
+      "test_name": "AC-3: a published listing appears in GET /api/listings on the very next request"
+    },
+    {
+      "ac_id": "AC-3",
+      "test_name": "AC-3: draft listings are excluded from the public list"
+    },
+    {
+      "ac_id": "AC-3",
+      "test_name": "AC-3: results are ordered by published_at DESC"
+    }
+  ],
+  "proposed_ontology_terms": [],
+  "tokens_used": { "input": 0, "output": 0 },
+  "error": null
+}
