@@ -2,7 +2,7 @@ run_id: 2026-05-11-backend-scaffold-baseline
 status: shipped
 phase: phase_deliver_complete
 shipped_pr: 46
-shipped_sha: 9cc514e
+shipped_sha: 18c7aa3
 planned_cycles: 4
 dep_graph:
   cycle-1: []
