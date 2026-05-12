@@ -1,6 +1,13 @@
 run_id: 2026-05-12-s-1-3-image-upload
 status: in_flight
-phase: phase_bootstrap_complete
+phase: phase_0_plan_complete
+planned_cycles: 5
+dep_graph:
+  cycle-1: []
+  cycle-2: [cycle-1]
+  cycle-3: [cycle-1]
+  cycle-4: [cycle-1]
+  cycle-5: [cycle-2, cycle-3, cycle-4]
 input_shape: issue
 triviality: standard
 mode: concurrent
