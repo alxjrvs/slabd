@@ -1,0 +1,53 @@
+run_id: 2026-05-11-backend-scaffold-baseline
+status: shipped
+phase: phase_deliver_complete
+shipped_pr: 46
+shipped_sha: 9cc514e
+planned_cycles: 4
+dep_graph:
+  cycle-1: []
+  cycle-2: []
+  cycle-3: [cycle-1, cycle-2]
+  cycle-4: [cycle-3]
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: ad6bc3f8a424a1ad41ff6a0e50bf0980591d65f0
+  run_branch: run/2026-05-11-backend-scaffold-baseline
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 43
+issue_body_sha:
+  "43": 9b1db9e6830369245c8c0442a9b18c9639a9355c
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  Stand up the minimum backend surface required to unblock S-1.2 (Stripe
+  Connect), S-1.3 (image upload pipeline), and S-1.4 (GCD catalog). Repo
+  is Expo-only today. Land Hono on Expo Router API routes, Drizzle + Neon
+  Postgres, Clerk JWT verification, healthz + /me endpoints, and the
+  Cloudflare Pages deploy wiring. Architecture's Fly.io + BullMQ target
+  is deferred until payment-state-machine workers need async jobs.
+language: typescript
+constraints:
+  - Conventional commits, pre-commit hooks must pass
+  - No console.* in production code (use logger surface from S-1.5)
+  - Use Workers-compatible drivers (@neondatabase/serverless, not pg)
+  - Clerk JWT verification must be networkless (cached JWKS)
+  - All new env vars declared in .env.example AND wrangler.toml
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0

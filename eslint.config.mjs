@@ -6,6 +6,8 @@ export default [
     ignores: [
       "node_modules",
       ".expo",
+      ".claude",
+      ".worktrees",
       "dist",
       "ios",
       "android",
