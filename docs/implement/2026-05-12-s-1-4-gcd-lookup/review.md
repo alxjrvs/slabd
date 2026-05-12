@@ -2,9 +2,9 @@
 run_id: 2026-05-12-s-1-4-gcd-lookup
 phase: phase_4_review
 schema_version: 1
-status: changes_required
-head_sha: 6a6051f
-re_review_count: 0
+status: approved
+head_sha: 979c2f8
+re_review_count: 1
 ---
 
 # Phase 4 — Final Review (Panel + Corroboration)
@@ -97,10 +97,56 @@ One remediation cycle (cycle-5) addresses F1–F4 on the run branch directly
 (no worktree; sequential single-thread fix). Aggregate budget consumed: 5 of
 12 cycles. Re-review with minimal panel (2 reviewers) after remediation.
 
-## Verifiable evidence
+## Verifiable evidence (initial pass, head 6a6051f)
 
 - `git diff --stat main..HEAD`: 31 files, +2427 lines.
 - Test suite at HEAD: 104 suites / 658 tests pass.
 - Typecheck + lint green.
 - No `--no-verify` traces in cycle commits.
 - Commit messages follow conventional-commits.
+
+---
+
+# Re-review pass — minimal panel (re_review_count: 1)
+
+After cycle-5 (commit `979c2f8`) the minimal-panel re-review ran with the
+two original corroborators on the must-fix findings.
+
+## Reviewer verdicts (second pass)
+
+| Reviewer | Verdict | Scope |
+|---|---|---|
+| silent-failure-hunter | APPROVED | F1 + F2 verified RESOLVED; no new silent failures in commit `979c2f8` |
+| pr-test-analyzer | APPROVED | F4 verified RESOLVED; no new test-quality findings |
+
+Aggregated verdict: **APPROVED**.
+
+## Resolution evidence
+
+- **F1** — `lib/server/routes/catalog-search.ts:102-108` now logs `warn`
+  with `serializeError(err)`, `queryKey`, and the normalized query before
+  falling through to the adapter. Confirmed by silent-failure-hunter.
+- **F2** — `lib/server/app.ts:36, 63` now resolves the default `db` to
+  the lazy proxy from `~/lib/db` (loud `DATABASE_URL is not set` error in
+  prod; `{}` stub under `NODE_ENV=test`/`JEST_WORKER_ID`). Confirmed by
+  silent-failure-hunter via `lib/db/client.ts`.
+- **F3** — `drizzle/meta/_journal.json` now contains idx 1 for
+  `0001_stripe_webhook_events` (orphan from S-1.2 backfilled). Idx 2
+  intentionally left for PR #49 (S-1.3) to fill on merge.
+- **F4** — `lib/server/catalog/__tests__/cache.test.ts:214-293` now
+  asserts the captured WHERE descriptor uses `gt` (not `gte`) on a fresh
+  `Date()`, and behaviorally exercises the future-expiry hit + past-
+  expiry miss through `applyCondition` (no fixture-bypass). Confirmed by
+  pr-test-analyzer: a `gt → gte` flip fails the `__op === "gt"`
+  assertion (and would additionally throw at the call site, since the
+  mock has no `gte` export).
+
+## Verifiable evidence (re-review pass, head 979c2f8)
+
+- `git diff --stat main..HEAD`: cycle-5 added 5 files / +233 lines / -10
+  lines on top of cycle-4. Production diff for the four must-fixes is 8
+  lines total.
+- Test suite at HEAD: 104 suites / 660 tests pass (net +2 over initial:
+  three new boundary tests replacing one weak test).
+- Typecheck + lint green.
+- D1–D13 deferred items unchanged.
