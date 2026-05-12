@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const stripeWebhookEvents = pgTable("stripe_webhook_events", {
   eventId: text("event_id").primaryKey(),
@@ -21,4 +21,13 @@ export const sellerAccounts = pgTable("seller_accounts", {
   payoutsEnabled: boolean("payouts_enabled").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const listingImages = pgTable("images", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  r2Key: text("r2_key").notNull(),
+  position: integer("position").notNull(),
+  isPrimary: boolean("is_primary").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
