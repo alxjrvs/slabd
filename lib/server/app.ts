@@ -28,6 +28,11 @@ import {
   type StripeWebhookDeps,
 } from "./routes/stripe-webhook";
 import { listingsStubHandler } from "./routes/listings-stub";
+import {
+  createCatalogSearchHandler,
+  type CatalogSearchDeps,
+} from "./routes/catalog-search";
+import { FixtureCatalogAdapter } from "./catalog/fixture-adapter";
 import type { AppVars } from "./types";
 
 export interface CreateAppOptions extends ClerkAuthOptions {
@@ -35,6 +40,7 @@ export interface CreateAppOptions extends ClerkAuthOptions {
   onboardingStatusDeps?: OnboardingStatusDeps;
   stripeWebhookDeps?: StripeWebhookDeps;
   requireSellerOnboardedOptions?: RequireSellerOnboardedOptions;
+  catalogSearchDeps?: CatalogSearchDeps;
 }
 
 export function createApp(
@@ -45,8 +51,18 @@ export function createApp(
     onboardingStatusDeps,
     stripeWebhookDeps,
     requireSellerOnboardedOptions,
+    catalogSearchDeps,
     ...clerkAuthOptions
   } = options;
+
+  const ttlDays =
+    parseInt(process.env.CATALOG_CACHE_TTL_DAYS ?? "", 10) || 30;
+
+  const resolvedCatalogSearchDeps: CatalogSearchDeps = catalogSearchDeps ?? {
+    db: {} as CatalogSearchDeps["db"],
+    adapter: new FixtureCatalogAdapter(),
+    env: { CATALOG_CACHE_TTL_DAYS: ttlDays },
+  };
 
   const app = new Hono<{ Variables: AppVars }>();
 
@@ -78,6 +94,10 @@ export function createApp(
   app.use("/api/listings", clerkAuth(clerkAuthOptions));
   app.use("/api/listings", requireSellerOnboarded(requireSellerOnboardedOptions));
   app.post("/api/listings", listingsStubHandler);
+
+  // Catalog search — Clerk-gated.
+  app.use("/api/catalog/search", clerkAuth(clerkAuthOptions));
+  app.get("/api/catalog/search", createCatalogSearchHandler(resolvedCatalogSearchDeps));
 
   return app;
 }
