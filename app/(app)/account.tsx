@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Switch } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
+import { useAuth } from "~/lib/auth";
 import { logger, serializeError } from "~/lib/logger";
 import { useTheme } from "~/lib/theme-provider";
 
@@ -32,30 +33,33 @@ function readPrefs(metadata: unknown): NotificationPrefs {
 
 export default function AccountScreen() {
   const { user } = useUser();
+  const { user: authUser } = useAuth();
   const { signOut } = useClerk();
   const theme = useTheme();
 
   const initialPrefs = useMemo(() => readPrefs(user?.unsafeMetadata), [user?.unsafeMetadata]);
 
-  const [firstName, setFirstName] = useState(user?.firstName ?? "");
-  const [lastName, setLastName] = useState(user?.lastName ?? "");
+  const initialFirstName = authUser.kind === "signed-in" ? (authUser.firstName ?? "") : "";
+  const initialLastName = authUser.kind === "signed-in" ? (authUser.lastName ?? "") : "";
+  const identifier = authUser.kind === "signed-in" ? authUser.identifier : "";
+
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
   const [prefs, setPrefs] = useState<NotificationPrefs>(initialPrefs);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = user?.id;
+  const userId = authUser.kind === "signed-in" ? authUser.id : null;
   useEffect(() => {
-    setFirstName(user?.firstName ?? "");
-    setLastName(user?.lastName ?? "");
+    setFirstName(initialFirstName);
+    setLastName(initialLastName);
     setPrefs(initialPrefs);
     // Only resync form state when the signed-in identity changes — not on
     // every Clerk reload (which would clobber unsaved edits after a save).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
-
-  const identifier =
-    user?.primaryEmailAddress?.emailAddress ?? user?.primaryPhoneNumber?.phoneNumber ?? "";
 
   const handleSave = async () => {
     if (!user) return;
@@ -74,6 +78,11 @@ export default function AccountScreen() {
         flow: "account.update",
         error: serializeError(err),
       });
+      // Optimistic rollback: when the server rejects, snap the form back
+      // to the last-known-persisted Clerk values so the UI never lies.
+      setFirstName(initialFirstName);
+      setLastName(initialLastName);
+      setPrefs(initialPrefs);
       setError("Couldn't save changes. Please try again.");
     } finally {
       setSubmitting(false);
@@ -82,6 +91,29 @@ export default function AccountScreen() {
 
   const togglePref = (key: keyof NotificationPrefs) =>
     setPrefs((current) => ({ ...current, [key]: !current[key] }));
+
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    setError(null);
+    try {
+      await signOut();
+    } catch (err) {
+      logger.error("account: signOut failed", {
+        flow: "account.signOut",
+        error: serializeError(err),
+      });
+      setError("Couldn't sign out. Please try again.");
+    } finally {
+      // Always clear the guard. The early-return + disabled prop prevent
+      // double-tap during the in-flight await; once signOut() resolves the
+      // session is already gone, so a late tap is a no-op against an
+      // already-signed-out Clerk. Leaving the flag set on success would
+      // wedge the button if Clerk's auth flip is delayed or the screen
+      // re-mounts (e.g. deep-link).
+      setSigningOut(false);
+    }
+  };
 
   return (
     <ScrollView
@@ -127,7 +159,13 @@ export default function AccountScreen() {
       ) : null}
 
       <Button label="Save changes" onPress={handleSave} loading={submitting} />
-      <Button label="Sign out" variant="secondary" onPress={() => signOut()} />
+      <Button
+        label="Sign out"
+        variant="secondary"
+        onPress={handleSignOut}
+        loading={signingOut}
+        disabled={signingOut}
+      />
     </ScrollView>
   );
 }

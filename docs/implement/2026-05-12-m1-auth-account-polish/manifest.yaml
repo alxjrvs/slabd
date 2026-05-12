@@ -1,0 +1,31 @@
+schema_version: 1
+run_id: 2026-05-12-m1-auth-account-polish
+status: in_flight
+mode: concurrent
+input_shape: prose
+triviality: standard
+issues: [31, 32, 33, 34, 35, 36, 37]
+repo_root: /Users/jarvis/Code/slabd
+base_branch: main
+base_sha: 1cdba540fb419cc997d2a1b5affd87cda9e7ee08
+run_branch: run/2026-05-12-m1-auth-account-polish
+pr_strategy: one
+aggregate_budget: 12
+gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+commit_policy: per-cycle
+phases:
+  bootstrap:
+    status: complete
+  define:
+    status: complete
+flags:
+  no_issue: true   # all 7 issues pre-exist
+  no_pr: false
+  no_commit: false
+cost_so_far:
+  input_tokens: 0
+  output_tokens: 0
+  usd: 0

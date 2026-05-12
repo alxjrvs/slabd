@@ -7,7 +7,7 @@ import { Button, Field, Text, View } from "~/components/ds";
 import { isValidEmail } from "~/lib/identifier";
 import { logger, serializeError } from "~/lib/logger";
 
-export default function SignInScreen() {
+export default function SignUpScreen() {
   const router = useRouter();
   const { isLoaded, signUp } = useSignUp();
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export default function SignInScreen() {
       router.push({ pathname: "/(auth)/verify-email", params: { email: trimmed } });
     } catch (err) {
       logger.error("sign-up email: prepare failed", {
-        flow: "auth.email.sign_in",
+        flow: "auth.email.sign_up",
         error: serializeError(err),
       });
       setError("Couldn't send code. Try again.");
@@ -61,7 +61,7 @@ export default function SignInScreen() {
           error={error ?? undefined}
         />
         <Button label="Send code" onPress={handleSubmit} loading={submitting} />
-        <Link href="/(auth)/sign-in-phone" asChild>
+        <Link href="/(auth)/sign-up-phone" asChild>
           <Text style={styles.alt}>Use phone number instead</Text>
         </Link>
       </View>

@@ -31,6 +31,21 @@ describe("isValidPhone (E.164)", () => {
   ])("treats %p as valid=%p", (value, expected) => {
     expect(isValidPhone(value)).toBe(expected);
   });
+
+  // AC-3: boundary regression — E.164 mandates 8-15 total digits after the +.
+  // Anything outside that range (7 below, 16 above) must be rejected, and the
+  // leading digit must never be 0 (country codes have no leading zero).
+  describe("AC-3: digit-count boundary regression (#33)", () => {
+    it.each([
+      ["+1234567", false, "7 digits — below the 8-digit floor"],
+      ["+12345678", true, "8 digits — minimum E.164 length"],
+      ["+123456789012345", true, "15 digits — maximum E.164 length"],
+      ["+1234567890123456", false, "16 digits — exceeds the 15-digit ceiling"],
+      ["+01234567", false, "leading 0 — country codes cannot start with 0"],
+    ])("treats %p as valid=%p (%s)", (value, expected) => {
+      expect(isValidPhone(value)).toBe(expected);
+    });
+  });
 });
 
 describe("isValidOtp", () => {

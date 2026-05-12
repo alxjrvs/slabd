@@ -6,7 +6,7 @@ import IndexRoute from "../index";
 
 jest.mock("~/lib/auth", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => children,
-  useAuth: () => ({ isLoaded: true, isSignedIn: false, user: null, signOut: jest.fn() }),
+  useAuth: () => ({ isLoaded: true, user: { kind: "signed-out" }, signOut: jest.fn() }),
 }));
 
 jest.mock("expo-router", () => {
@@ -22,14 +22,14 @@ jest.mock("expo-router", () => {
 });
 
 describe("routing: auth gating (AC-2, AC-7)", () => {
-  it("AC-7: app/index redirects unauthenticated users to (auth)/sign-in", () => {
+  it("AC-7: app/index redirects unauthenticated users to (auth)/sign-up", () => {
     render(<IndexRoute />);
-    expect(screen.getByTestId("redirect")).toHaveTextContent("/(auth)/sign-in");
+    expect(screen.getByTestId("redirect")).toHaveTextContent("/(auth)/sign-up");
   });
 
-  it("AC-7: (app) group redirects unauthenticated users back to sign-in", () => {
+  it("AC-7: (app) group redirects unauthenticated users back to sign-up", () => {
     render(<AppGroupLayout />);
-    expect(screen.getByTestId("redirect")).toHaveTextContent("/(auth)/sign-in");
+    expect(screen.getByTestId("redirect")).toHaveTextContent("/(auth)/sign-up");
   });
 
   it("AC-7: (auth) group renders its stack when unauthenticated (no redirect)", () => {

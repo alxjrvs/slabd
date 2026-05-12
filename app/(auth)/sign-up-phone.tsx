@@ -7,7 +7,7 @@ import { Button, Field, Text, View } from "~/components/ds";
 import { isValidPhone } from "~/lib/identifier";
 import { logger, serializeError } from "~/lib/logger";
 
-export default function SignInPhoneScreen() {
+export default function SignUpPhoneScreen() {
   const router = useRouter();
   const { isLoaded, signUp } = useSignUp();
   const [phone, setPhone] = useState("");
@@ -32,7 +32,7 @@ export default function SignInPhoneScreen() {
       router.push({ pathname: "/(auth)/verify-phone", params: { phone: trimmed } });
     } catch (err) {
       logger.error("sign-up phone: prepare failed", {
-        flow: "auth.phone.sign_in",
+        flow: "auth.phone.sign_up",
         error: serializeError(err),
       });
       setError("Couldn't send code. Try again.");

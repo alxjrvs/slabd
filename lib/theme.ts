@@ -1,17 +1,29 @@
 export type ColorScheme = "light" | "dark";
 
+declare const HexColorBrand: unique symbol;
+export type HexColor = string & { readonly [HexColorBrand]: "HexColor" };
+
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+
+export function hex(value: string): HexColor {
+  if (!HEX_RE.test(value)) {
+    throw new Error(`Invalid HexColor: ${JSON.stringify(value)} — expected #rrggbb`);
+  }
+  return value as HexColor;
+}
+
 export type Palette = {
-  bg: string;
-  surface: string;
-  surfaceMuted: string;
-  text: string;
-  textMuted: string;
-  textOnPrimary: string;
-  primary: string;
-  primaryPressed: string;
-  border: string;
-  danger: string;
-  success: string;
+  bg: HexColor;
+  surface: HexColor;
+  surfaceMuted: HexColor;
+  text: HexColor;
+  textMuted: HexColor;
+  textOnPrimary: HexColor;
+  primary: HexColor;
+  primaryPressed: HexColor;
+  border: HexColor;
+  danger: HexColor;
+  success: HexColor;
 };
 
 export type Spacing = (n: number) => number;
@@ -41,31 +53,31 @@ const baseTypography: Typography = {
 };
 
 const lightPalette: Palette = {
-  bg: "#ffffff",
-  surface: "#fafafa",
-  surfaceMuted: "#f1f3f5",
-  text: "#0b0b0c",
-  textMuted: "#5b6470",
-  textOnPrimary: "#ffffff",
-  primary: "#1f3aff",
-  primaryPressed: "#1731cc",
-  border: "#d8dde3",
-  danger: "#b21f2d",
-  success: "#1a7a3d",
+  bg: hex("#ffffff"),
+  surface: hex("#fafafa"),
+  surfaceMuted: hex("#f1f3f5"),
+  text: hex("#0b0b0c"),
+  textMuted: hex("#5b6470"),
+  textOnPrimary: hex("#ffffff"),
+  primary: hex("#1f3aff"),
+  primaryPressed: hex("#1731cc"),
+  border: hex("#d8dde3"),
+  danger: hex("#b21f2d"),
+  success: hex("#1a7a3d"),
 };
 
 const darkPalette: Palette = {
-  bg: "#0b0b0c",
-  surface: "#141416",
-  surfaceMuted: "#1d1f23",
-  text: "#fafafa",
-  textMuted: "#a4abb6",
-  textOnPrimary: "#ffffff",
-  primary: "#7c8cff",
-  primaryPressed: "#5d6fe6",
-  border: "#2a2d33",
-  danger: "#ff7a85",
-  success: "#5ed18a",
+  bg: hex("#0b0b0c"),
+  surface: hex("#141416"),
+  surfaceMuted: hex("#1d1f23"),
+  text: hex("#fafafa"),
+  textMuted: hex("#a4abb6"),
+  textOnPrimary: hex("#ffffff"),
+  primary: hex("#7c8cff"),
+  primaryPressed: hex("#5d6fe6"),
+  border: hex("#2a2d33"),
+  danger: hex("#ff7a85"),
+  success: hex("#5ed18a"),
 };
 
 export const lightTheme: Theme = {

@@ -3,15 +3,19 @@ import { useCallback, useMemo, type ReactNode } from "react";
 
 import { tokenCache } from "./token-cache";
 
-export type AuthUser = {
-  id: string;
-  identifier: string;
-};
+export type AuthUser =
+  | { kind: "signed-out" }
+  | {
+      kind: "signed-in";
+      id: string;
+      identifier: string;
+      firstName: string | null;
+      lastName: string | null;
+    };
 
 export type AuthContextValue = {
   isLoaded: boolean;
-  isSignedIn: boolean;
-  user: AuthUser | null;
+  user: AuthUser;
   signOut: () => Promise<void>;
 };
 
@@ -41,16 +45,19 @@ export function useAuth(): AuthContextValue {
   return useMemo<AuthContextValue>(() => {
     const isLoaded = clerkAuth.isLoaded === true && userLoaded === true;
     const isSignedIn = clerkAuth.isSignedIn === true;
-    const mappedUser: AuthUser | null =
+    const mappedUser: AuthUser =
       isSignedIn && user
         ? {
+            kind: "signed-in",
             id: user.id,
             identifier:
               user.primaryEmailAddress?.emailAddress ??
               user.primaryPhoneNumber?.phoneNumber ??
               user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
           }
-        : null;
-    return { isLoaded, isSignedIn, user: mappedUser, signOut };
+        : { kind: "signed-out" };
+    return { isLoaded, user: mappedUser, signOut };
   }, [clerkAuth.isLoaded, clerkAuth.isSignedIn, user, userLoaded, signOut]);
 }

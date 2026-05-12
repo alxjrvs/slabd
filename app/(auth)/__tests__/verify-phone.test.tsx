@@ -1,9 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
 import VerifyPhoneScreen from "../verify-phone";
 
 const mockRouterReplace = jest.fn();
 const mockAttempt = jest.fn();
+const mockPreparePhone = jest.fn();
 const mockSetActive = jest.fn();
 
 jest.mock("expo-router", () => ({
@@ -16,6 +17,7 @@ jest.mock("@clerk/clerk-expo", () => ({
     isLoaded: true,
     signUp: {
       attemptPhoneNumberVerification: mockAttempt,
+      preparePhoneNumberVerification: mockPreparePhone,
     },
     setActive: mockSetActive,
   }),
@@ -52,5 +54,89 @@ describe("VerifyPhoneScreen (AC-4 phone OTP)", () => {
       expect(mockSetActive).toHaveBeenCalledWith({ session: "sess_phone_1" });
       expect(mockRouterReplace).toHaveBeenCalledWith("/(app)");
     });
+  });
+});
+
+describe("VerifyPhoneScreen — 90-second resend gate (#34 AC-4)", () => {
+  // Load-bearing: drives the cooldown clock with jest fake timers so the
+  // assertions actually exercise the gating logic. A wall-clock check would
+  // pass even if the gate were silently removed.
+  beforeEach(() => {
+    jest.useFakeTimers();
+    mockPreparePhone.mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("disables resend at t=0 and t=89s, enables at t=90s, and only prepares once before the gate opens", async () => {
+    render(<VerifyPhoneScreen />);
+
+    // t=0: resend must be disabled (cooldown just started). Pressing it
+    // must NOT call preparePhoneNumberVerification.
+    const initial = screen.getByRole("button", { name: /Resend in 90s/ });
+    expect(initial.props.accessibilityState).toMatchObject({ disabled: true });
+    fireEvent.press(initial);
+    expect(mockPreparePhone).not.toHaveBeenCalled();
+
+    // t=89s: still disabled, still no resend call.
+    act(() => {
+      jest.advanceTimersByTime(89_000);
+    });
+    const at89 = screen.getByRole("button", { name: /Resend in 1s/ });
+    expect(at89.props.accessibilityState).toMatchObject({ disabled: true });
+    fireEvent.press(at89);
+    expect(mockPreparePhone).not.toHaveBeenCalled();
+
+    // t=90s: gate opens. Button label flips to "Resend code" and disabled
+    // flag clears.
+    act(() => {
+      jest.advanceTimersByTime(1_000);
+    });
+    const at90 = screen.getByRole("button", { name: "Resend code" });
+    expect(at90.props.accessibilityState).toMatchObject({ disabled: false });
+
+    // Pressing now triggers exactly one preparePhoneNumberVerification call.
+    await act(async () => {
+      fireEvent.press(at90);
+    });
+    await waitFor(() => {
+      expect(mockPreparePhone).toHaveBeenCalledTimes(1);
+      expect(mockPreparePhone).toHaveBeenCalledWith({ strategy: "phone_code" });
+    });
+  });
+
+  // Remediation (#34 follow-up): a failed resend must (a) surface a generic
+  // error and (b) restart the 90s cooldown. Otherwise a transient blip lets
+  // the user hammer Clerk's already-rate-limited prepare endpoint.
+  it("on resend failure: surfaces an error AND restarts the cooldown", async () => {
+    mockPreparePhone.mockReset();
+    mockPreparePhone.mockRejectedValueOnce(new Error("clerk rate limited"));
+
+    render(<VerifyPhoneScreen />);
+    // Advance to t=90s so the gate opens.
+    act(() => {
+      jest.advanceTimersByTime(90_000);
+    });
+    const enabled = screen.getByRole("button", { name: "Resend code" });
+    expect(enabled.props.accessibilityState).toMatchObject({ disabled: false });
+
+    await act(async () => {
+      fireEvent.press(enabled);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Couldn't resend the code/i)).toBeOnTheScreen();
+    });
+
+    // Cooldown must have restarted — the button is back to "Resend in 90s"
+    // and disabled. A naive impl that only restarts on success would leave
+    // the button enabled here.
+    const afterFail = screen.getByRole("button", { name: /Resend in 90s/ });
+    expect(afterFail.props.accessibilityState).toMatchObject({ disabled: true });
+    fireEvent.press(afterFail);
+    // Still only the one (failed) prepare call — the gate is preventing spam.
+    expect(mockPreparePhone).toHaveBeenCalledTimes(1);
   });
 });

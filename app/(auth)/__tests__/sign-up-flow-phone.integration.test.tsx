@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
-import SignInPhoneScreen from "../sign-in-phone";
+import SignUpPhoneScreen from "../sign-up-phone";
 import VerifyPhoneScreen from "../verify-phone";
 
 const mockCreate = jest.fn();
@@ -43,7 +43,7 @@ describe("AC-4 phone sign-up integration", () => {
   it("AC-4: drives phone → OTP → authed-home end-to-end in well under 90s", async () => {
     const start = Date.now();
 
-    const { unmount } = render(<SignInPhoneScreen />);
+    const { unmount } = render(<SignUpPhoneScreen />);
 
     fireEvent.changeText(screen.getByLabelText("Phone number"), "+15555550101");
     fireEvent.press(screen.getByRole("button", { name: "Send code" }));

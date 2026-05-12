@@ -1,11 +1,14 @@
 import { useSignUp } from "@clerk/clerk-expo";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 
 import { Button, Field, Text, View } from "~/components/ds";
 import { isValidOtp } from "~/lib/identifier";
 import { logger, serializeError } from "~/lib/logger";
+
+const RESEND_COOLDOWN_MS = 90_000;
+const TICK_MS = 1_000;
 
 export default function VerifyPhoneScreen() {
   const router = useRouter();
@@ -14,6 +17,19 @@ export default function VerifyPhoneScreen() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resendingAt, setResendingAt] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  const cooldownStartedAt = useRef<number>(Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), TICK_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  const elapsed = now - cooldownStartedAt.current;
+  const remainingMs = Math.max(0, RESEND_COOLDOWN_MS - elapsed);
+  const resendEnabled = remainingMs === 0 && !resendingAt;
+  const remainingSeconds = Math.ceil(remainingMs / 1000);
 
   const handleSubmit = async () => {
     if (!isValidOtp(code)) {
@@ -45,6 +61,30 @@ export default function VerifyPhoneScreen() {
     }
   };
 
+  const handleResend = async () => {
+    if (!resendEnabled || !isLoaded || !signUp) return;
+    setResendingAt(Date.now());
+    setError(null);
+    try {
+      await signUp.preparePhoneNumberVerification({ strategy: "phone_code" });
+      cooldownStartedAt.current = Date.now();
+      setNow(Date.now());
+    } catch (err) {
+      logger.error("verify phone: resend failed", {
+        flow: "auth.phone.resend",
+        error: serializeError(err),
+      });
+      // Restart the cooldown on failure too — otherwise a transient
+      // rate-limit / network blip would let the user spam Clerk and burn
+      // through its server-side rate limit.
+      cooldownStartedAt.current = Date.now();
+      setNow(Date.now());
+      setError("Couldn't resend the code. Try again in a moment.");
+    } finally {
+      setResendingAt(null);
+    }
+  };
+
   return (
     <View surface="bg" style={styles.container}>
       <Text variant="title">Check your phone</Text>
@@ -62,6 +102,17 @@ export default function VerifyPhoneScreen() {
           error={error ?? undefined}
         />
         <Button label="Verify" onPress={handleSubmit} loading={submitting} />
+        <Button
+          label={
+            resendEnabled
+              ? "Resend code"
+              : `Resend in ${remainingSeconds}s`
+          }
+          variant="secondary"
+          onPress={handleResend}
+          disabled={!resendEnabled}
+          loading={resendingAt !== null}
+        />
       </View>
     </View>
   );

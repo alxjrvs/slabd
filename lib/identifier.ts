@@ -1,5 +1,5 @@
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const E164_RE = /^\+[1-9]\d{6,14}$/;
+export const E164_RE = /^\+[1-9]\d{7,14}$/;
 export const OTP_RE = /^\d{6}$/;
 
 export function isValidEmail(value: string): boolean {
