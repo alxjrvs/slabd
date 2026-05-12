@@ -47,8 +47,7 @@ added to `.github/workflows/ci.yml` after `check-stripe-config`.
 
 ## Commit SHA
 
-<!-- filled in after commit -->
-TBD
+dcc0ea7
 
 ## Tests added
 
