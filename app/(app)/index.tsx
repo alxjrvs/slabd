@@ -14,6 +14,7 @@ export default function Home() {
         An Infinite Longbox
       </Text>
       <View style={styles.actions}>
+        <Button label="Sell a comic" onPress={() => router.push("/sell")} />
         <Button
           label="Profile"
           variant="secondary"
