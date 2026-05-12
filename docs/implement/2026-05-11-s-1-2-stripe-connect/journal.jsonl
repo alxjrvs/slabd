@@ -1,0 +1,3 @@
+{"ts":"2026-05-12T02:50:00Z","event":"phase_bootstrap_complete","run_id":"2026-05-11-s-1-2-stripe-connect","base_sha":"156fe3e781fad0b113ec79494c8f3ffcedd8f1d0","run_branch":"run/2026-05-11-s-1-2-stripe-connect","mode":"concurrent","pr_strategy":"one","triviality":"standard","issues":[3]}
+{"ts":"2026-05-12T02:55:00Z","event":"phase_define_complete","run_id":"2026-05-11-s-1-2-stripe-connect","intent_path":"docs/implement/2026-05-11-s-1-2-stripe-connect/intent.md","acs":5,"issue":3,"issue_body_sha":"6aa97052e1570a4206c1adf99d37f867a45ad120"}
+{"ts":"2026-05-12T03:05:00Z","event":"phase_0_complete","run_id":"2026-05-11-s-1-2-stripe-connect","plan_path":"docs/implement/2026-05-11-s-1-2-stripe-connect/plan.md","planned_cycles":5,"adr_count":4,"context_doc_count":1}

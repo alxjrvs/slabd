@@ -45,5 +45,8 @@ Thumbs.db
 # Worktrees
 .worktrees/
 
+# Local Claude Code agent state
+.claude/
+
 # Build artifacts
 *.tsbuildinfo
