@@ -2,7 +2,7 @@
 cycle: 4
 run_id: 2026-05-11-backend-scaffold-baseline
 branch: cycle-4/backend-scaffold-baseline
-head_sha: TBD — updated after commit
+head_sha: ae8d385d8cae52c5d96a0bb820ffdb5df82c0eb0
 parent_sha: 17499172a24d52be1dfb48d562f3fc95b0d15140
 ---
 
