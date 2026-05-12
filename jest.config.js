@@ -12,9 +12,7 @@ module.exports = {
     "/node_modules/",
     "/tests/e2e/",
     "/.expo/",
-    // Narrowed: skip .claude/skills and .claude/settings dirs, but not worktrees
-    "/.claude/skills/",
-    "/.claude/settings",
+    "/.claude/",
     "/.worktrees/",
   ],
   moduleNameMapper: {
