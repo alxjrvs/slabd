@@ -103,15 +103,20 @@ function validatePublishRequirements(
     fields.grade_company = "invalid";
   }
 
-  // grade_numeric — stored as numeric(3,1), may come back as string from DB
-  if (listing.gradeNumeric === null || listing.gradeNumeric === "") {
-    fields.grade_numeric = "missing";
-  } else {
-    const n = typeof listing.gradeNumeric === "string"
-      ? parseFloat(listing.gradeNumeric)
-      : listing.gradeNumeric;
-    if (isNaN(n) || n < 0.5 || n > 10.0) {
-      fields.grade_numeric = "invalid";
+  // grade_numeric — required only for slabbed (CGC/CBCS); Raw listings
+  // don't carry a numeric grade. Stored as numeric(3,1), may come back as
+  // string from DB.
+  const isSlabbed = listing.gradeCompany === "CGC" || listing.gradeCompany === "CBCS";
+  if (isSlabbed) {
+    if (listing.gradeNumeric === null || listing.gradeNumeric === "") {
+      fields.grade_numeric = "missing";
+    } else {
+      const n = typeof listing.gradeNumeric === "string"
+        ? parseFloat(listing.gradeNumeric)
+        : listing.gradeNumeric;
+      if (isNaN(n) || n < 0.5 || n > 10.0) {
+        fields.grade_numeric = "invalid";
+      }
     }
   }
 

@@ -477,6 +477,21 @@ describe("listingsPublishHandler", () => {
       expect(res.status).toBe(200);
     });
 
+    it("AC-2: Raw with null grade_numeric publishes — numeric grade is slabbed-only", async () => {
+      const db = buildMockDb({
+        listing: makeDraftListing({ gradeCompany: "Raw", gradeNumeric: null }),
+        images: [makeImage(0), makeImage(1)],
+      });
+      const app = buildApp({
+        db: db as unknown as ListingsPublishDeps["db"],
+        now: () => new Date("2026-05-12T10:00:00.000Z"),
+      });
+
+      const res = await app.request("/api/listings/listing-1/publish", { method: "POST" });
+
+      expect(res.status).toBe(200);
+    });
+
     it("accepts price_cents exactly 100 (minimum valid)", async () => {
       const db = buildMockDb({
         listing: makeDraftListing({ priceCents: 100 }),
