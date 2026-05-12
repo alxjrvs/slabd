@@ -1,6 +1,8 @@
 run_id: 2026-05-11-s-1-2-stripe-connect
-status: in_flight
-phase: phase_0_plan_complete
+status: shipped
+phase: phase_5_ship_complete
+pr: 48
+merge_commit: 1b17a2abe1b78f273406c686477eef8452a21e27
 planned_cycles: 5
 dep_graph:
   cycle-1: []
