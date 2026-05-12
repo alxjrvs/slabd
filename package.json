@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "2.19.31",
+    "@neondatabase/serverless": "1.1.0",
     "@sentry/react-native": "8.11.1",
+    "drizzle-orm": "0.45.2",
     "expo": "55.0.23",
     "expo-constants": "~18.0.10",
     "expo-linking": "~8.0.9",
@@ -48,6 +50,7 @@
     "@types/jest": "^29.5.14",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-config-expo": "^55.0.0",
     "eslint-plugin-react-native-a11y": "^3.5.1",

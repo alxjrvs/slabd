@@ -1,0 +1,19 @@
+import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+
+export const users = pgTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const sellerAccounts = pgTable("seller_accounts", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id),
+  stripeAccountId: text("stripe_account_id"),
+  onboardingStatus: text("onboarding_status").notNull().default("pending"),
+  payoutsEnabled: boolean("payouts_enabled").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
