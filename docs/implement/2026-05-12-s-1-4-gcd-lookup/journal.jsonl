@@ -10,3 +10,5 @@
 {"ts":"2026-05-12T08:00:00Z","event":"phase_4_review_complete","run_id":"2026-05-12-s-1-4-gcd-lookup","verdict":"CHANGES-REQUIRED","must_fix":4,"deferred":13,"head_sha":"6a6051f"}
 {"ts":"2026-05-12T00:00:00Z","event":"cycle_complete","cycle":5,"status":"complete","sha":"979c2f818aed6a22f2e5399491cdf698d02e983f","remediates":["F1","F2","F3","F4"],"acs_covered":[]}
 {"ts":"2026-05-12T00:00:00Z","event":"phase_4_review_complete","status":"approved","head_sha":"979c2f818aed6a22f2e5399491cdf698d02e983f","re_review_count":1,"panel":["silent-failure-hunter","pr-test-analyzer"]}
+{"ts":"2026-05-12T00:00:00Z","event":"phase_5_ship_complete","status":"shipped","pr":50,"pr_url":"https://github.com/alxjrvs/slabd/pull/50","head_sha":"7113241","issues":[6]}
+{"ts":"2026-05-12T00:00:00Z","event":"phase_deliver_complete","status":"shipped","run_id":"2026-05-12-s-1-4-gcd-lookup"}
