@@ -1,0 +1,46 @@
+run_id: 2026-05-12-s-1-4-gcd-lookup
+status: in_flight
+phase: phase_0_bootstrap_complete
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: be28c4c38a28897eb505b78090aa73f6e27508ac
+  run_branch: run/2026-05-12-s-1-4-gcd-lookup
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 6
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  S-1.4 GCD catalog lookup. Sellers search by series + issue ("Amazing
+  Spider-Man #129"); GCD returns matches within 1.5s p95; selecting a
+  match prefills series, issue number, variant, and cover thumbnail.
+  Results cached in Postgres with TTL. Manual entry remains a fallback.
+  Targets REQ-016 (catalog-assisted listing) and REQ-036 (third-party
+  data with TTL cache). Backend-only first; mobile picker integration is
+  a separate client-side story.
+language: typescript
+constraints:
+  - Conventional commits, pre-commit hooks must pass
+  - No console.* in production code (use lib/logger from S-1.5)
+  - p95 latency target 1.5s for search; cached hits should be ≤ 100ms
+  - Cache TTL configurable via env var (default 30 days)
+  - Manual-entry fallback path is REQUIRED (no GCD dependency for listing flow)
+  - All new env vars in .env.example AND wrangler.toml AND CI soft-warn step
+  - Error responses use logger.warn/error with serializeError (no raw catch {})
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0
