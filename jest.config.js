@@ -13,7 +13,6 @@ module.exports = {
     "/tests/e2e/",
     "/.expo/",
     "/.claude/",
-    "/.worktrees/",
   ],
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/$1",
