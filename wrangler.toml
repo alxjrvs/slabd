@@ -10,18 +10,28 @@ compatibility_flags = ["nodejs_compat"]
 
 # Production environment secrets.
 # Secrets are NOT declared here — set them via the Cloudflare dashboard or:
-#   wrangler pages secret put DATABASE_URL           --project-name slabd-web
-#   wrangler pages secret put CLERK_SECRET_KEY       --project-name slabd-web
-#   wrangler pages secret put CLERK_PUBLISHABLE_KEY  --project-name slabd-web
-#   wrangler pages secret put STRIPE_SECRET_KEY      --project-name slabd-web
-#   wrangler pages secret put STRIPE_WEBHOOK_SECRET  --project-name slabd-web
-#   wrangler pages secret put EXPO_PUBLIC_APP_URL    --project-name slabd-web
+#   wrangler pages secret put DATABASE_URL                --project-name slabd-web
+#   wrangler pages secret put CLERK_SECRET_KEY            --project-name slabd-web
+#   wrangler pages secret put CLERK_PUBLISHABLE_KEY       --project-name slabd-web
+#   wrangler pages secret put STRIPE_SECRET_KEY           --project-name slabd-web
+#   wrangler pages secret put STRIPE_WEBHOOK_SECRET       --project-name slabd-web
+#   wrangler pages secret put EXPO_PUBLIC_APP_URL         --project-name slabd-web
+#   wrangler pages secret put CF_ACCOUNT_ID               --project-name slabd-web
+#   wrangler pages secret put CF_R2_ACCESS_KEY_ID         --project-name slabd-web
+#   wrangler pages secret put CF_R2_SECRET_ACCESS_KEY     --project-name slabd-web
+#   wrangler pages secret put CF_R2_BUCKET                --project-name slabd-web
+#   wrangler pages secret put CF_IMAGES_ACCOUNT_HASH      --project-name slabd-web
 [env.production.vars]
 
 # Preview environment secrets (per-branch deploys).
 # Same secret names — set via Cloudflare dashboard or wrangler pages secret put
 # with the --env preview flag.
-#   wrangler pages secret put STRIPE_SECRET_KEY      --project-name slabd-web --env preview
-#   wrangler pages secret put STRIPE_WEBHOOK_SECRET  --project-name slabd-web --env preview
-#   wrangler pages secret put EXPO_PUBLIC_APP_URL    --project-name slabd-web --env preview
+#   wrangler pages secret put STRIPE_SECRET_KEY          --project-name slabd-web --env preview
+#   wrangler pages secret put STRIPE_WEBHOOK_SECRET      --project-name slabd-web --env preview
+#   wrangler pages secret put EXPO_PUBLIC_APP_URL        --project-name slabd-web --env preview
+#   wrangler pages secret put CF_ACCOUNT_ID              --project-name slabd-web --env preview
+#   wrangler pages secret put CF_R2_ACCESS_KEY_ID        --project-name slabd-web --env preview
+#   wrangler pages secret put CF_R2_SECRET_ACCESS_KEY    --project-name slabd-web --env preview
+#   wrangler pages secret put CF_R2_BUCKET               --project-name slabd-web --env preview
+#   wrangler pages secret put CF_IMAGES_ACCOUNT_HASH     --project-name slabd-web --env preview
 [env.preview.vars]

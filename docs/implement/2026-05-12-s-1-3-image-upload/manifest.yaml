@@ -1,0 +1,54 @@
+run_id: 2026-05-12-s-1-3-image-upload
+status: shipped
+phase: phase_5_ship_complete
+pr_number: 49
+pr_url: https://github.com/alxjrvs/slabd/pull/49
+planned_cycles: 5
+dep_graph:
+  cycle-1: []
+  cycle-2: [cycle-1]
+  cycle-3: [cycle-1]
+  cycle-4: [cycle-1]
+  cycle-5: [cycle-2, cycle-3, cycle-4]
+input_shape: issue
+triviality: standard
+mode: concurrent
+pr_strategy: one
+commit_policy: per-cycle
+aggregate_budget: 12
+repo:
+  root: /Users/jarvis/Code/slabd
+  base_branch: main
+  base_sha: be28c4c38a28897eb505b78090aa73f6e27508ac
+  run_branch: run/2026-05-12-s-1-3-image-upload
+  gh_available: true
+test_commands:
+  unit: bun run typecheck && bun run lint && bun run test:ci
+  e2e: bun run test:e2e
+issues:
+  - 4
+flags:
+  no_issue: false
+  no_pr: false
+  no_commit: false
+  local: false
+scope_note: |
+  S-1.3 Image upload pipeline. Sellers select up to 8 images per listing;
+  each uploads direct to Cloudflare R2 via short-lived signed URL.
+  Cloudflare Images delivers card/thumb/detail variants. EXIF stripped on
+  upload. Primary image selectable; ordering persisted. Targets REQ-004
+  (image-first listings), REQ-021 (mobile upload UX), REQ-032 (transform
+  pipeline). Backend-only first; mobile picker integration is a separate
+  client-side story.
+language: typescript
+constraints:
+  - Conventional commits, pre-commit hooks must pass
+  - No console.* in production code (use lib/logger from S-1.5)
+  - Signed URLs must be short-lived (≤ 5 min TTL) and content-type pinned
+  - EXIF strip happens server-side or via Cloudflare Images variant pipeline
+  - All new env vars in .env.example AND wrangler.toml AND CI soft-warn step
+  - Image-count and total-size caps enforced server-side (max 8 images, max 10 MB each)
+cost_so_far:
+  tokens_in: 0
+  tokens_out: 0
+  dollars: 0

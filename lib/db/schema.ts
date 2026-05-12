@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import type { CatalogMatch } from "../server/catalog/types";
 
 export const stripeWebhookEvents = pgTable("stripe_webhook_events", {
@@ -29,4 +29,13 @@ export const catalogSearchCache = pgTable("catalog_search_cache", {
   payload: jsonb("payload").$type<CatalogMatch[]>().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});
+
+export const listingImages = pgTable("images", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  r2Key: text("r2_key").notNull(),
+  position: integer("position").notNull(),
+  isPrimary: boolean("is_primary").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

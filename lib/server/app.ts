@@ -32,6 +32,18 @@ import {
   createCatalogSearchHandler,
   type CatalogSearchDeps,
 } from "./routes/catalog-search";
+import {
+  listingsImagesUploadUrlHandler,
+  type ListingsImagesUploadUrlDeps,
+} from "./routes/listings-images-upload-url";
+import {
+  listingsImagesConfirmHandler,
+  type ListingsImagesConfirmDeps,
+} from "./routes/listings-images-confirm";
+import {
+  listingsImagesListHandler,
+  type ListingsImagesListDeps,
+} from "./routes/listings-images-list";
 import { FixtureCatalogAdapter } from "./catalog/fixture-adapter";
 import { db as defaultDb } from "~/lib/db";
 import type { AppVars } from "./types";
@@ -42,6 +54,9 @@ export interface CreateAppOptions extends ClerkAuthOptions {
   stripeWebhookDeps?: StripeWebhookDeps;
   requireSellerOnboardedOptions?: RequireSellerOnboardedOptions;
   catalogSearchDeps?: CatalogSearchDeps;
+  listingsImagesUploadUrlDeps?: ListingsImagesUploadUrlDeps;
+  listingsImagesConfirmDeps?: ListingsImagesConfirmDeps;
+  listingsImagesListDeps?: ListingsImagesListDeps;
 }
 
 export function createApp(
@@ -53,6 +68,9 @@ export function createApp(
     stripeWebhookDeps,
     requireSellerOnboardedOptions,
     catalogSearchDeps,
+    listingsImagesUploadUrlDeps,
+    listingsImagesConfirmDeps,
+    listingsImagesListDeps,
     ...clerkAuthOptions
   } = options;
 
@@ -95,6 +113,26 @@ export function createApp(
   app.use("/api/listings", clerkAuth(clerkAuthOptions));
   app.use("/api/listings", requireSellerOnboarded(requireSellerOnboardedOptions));
   app.post("/api/listings", listingsStubHandler);
+
+  // Listings images: upload-url — Clerk-gated.
+  app.use("/api/listings/:id/images/upload-url", clerkAuth(clerkAuthOptions));
+  app.post(
+    "/api/listings/:id/images/upload-url",
+    listingsImagesUploadUrlHandler(listingsImagesUploadUrlDeps),
+  );
+
+  // Listings images: confirm — Clerk-gated.
+  app.use("/api/listings/:id/images/confirm", clerkAuth(clerkAuthOptions));
+  app.post(
+    "/api/listings/:id/images/confirm",
+    listingsImagesConfirmHandler(listingsImagesConfirmDeps),
+  );
+
+  // Listings images: list — PUBLIC (no Clerk gate, per REQ-004).
+  app.get(
+    "/api/listings/:id/images",
+    listingsImagesListHandler(listingsImagesListDeps),
+  );
 
   // Catalog search — Clerk-gated.
   app.use("/api/catalog/search", clerkAuth(clerkAuthOptions));

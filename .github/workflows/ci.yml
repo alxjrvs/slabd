@@ -60,6 +60,28 @@ jobs:
             echo "::warning::CATALOG_CACHE_TTL_DAYS not set — default of 30 days will be used for catalog_search_cache TTL"
           fi
 
+  check-r2-config:
+    name: check r2 config
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+          CF_R2_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+          CF_R2_BUCKET: ${{ secrets.CF_R2_BUCKET }}
+          CF_IMAGES_ACCOUNT_HASH: ${{ secrets.CF_IMAGES_ACCOUNT_HASH }}
+        run: |
+          missing=""
+          if [ -z "$CF_ACCOUNT_ID" ]; then missing="$missing CF_ACCOUNT_ID"; fi
+          if [ -z "$CF_R2_ACCESS_KEY_ID" ]; then missing="$missing CF_R2_ACCESS_KEY_ID"; fi
+          if [ -z "$CF_R2_SECRET_ACCESS_KEY" ]; then missing="$missing CF_R2_SECRET_ACCESS_KEY"; fi
+          if [ -z "$CF_R2_BUCKET" ]; then missing="$missing CF_R2_BUCKET"; fi
+          if [ -z "$CF_IMAGES_ACCOUNT_HASH" ]; then missing="$missing CF_IMAGES_ACCOUNT_HASH"; fi
+          if [ -n "$missing" ]; then
+            echo "::warning::Cloudflare R2/Images secrets not set:$missing — image upload features will not work in this environment"
+          fi
+
   check-e2e-secret:
     name: check e2e secret
     runs-on: ubuntu-latest
